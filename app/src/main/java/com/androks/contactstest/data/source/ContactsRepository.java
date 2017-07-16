@@ -4,7 +4,7 @@ import com.androks.contactstest.data.Contact;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
@@ -47,12 +47,12 @@ public class ContactsRepository implements ContactsDataSource {
     }
 
     @Override
-    public Flowable<List<Contact>> getContacts() {
+    public Observable<List<Contact>> getContacts() {
         return null;
     }
 
     @Override
-    public Flowable<Contact> getContact(@NonNull String contactId) {
+    public Observable<List<Contact>> getContact(@NonNull String contactId) {
         return null;
     }
 

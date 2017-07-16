@@ -19,16 +19,16 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_CONTACTS_TABLE =
-            "CREATE TABLE " + ContactsPersistenceContract.TABLE_NAME + " (" +
-                    ContactsPersistenceContract._ID + TEXT_TYPE + " PRIMARY KEY," +
-                    ContactsPersistenceContract._OWNER + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._NAME + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._SURNAME + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._EMAIL + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._ADDITIONAL_EMAIL + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._PHONE + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._SECOND_PHONE + TEXT_TYPE + COMMA_SEP +
-                    ContactsPersistenceContract._THIRD_PHONE + TEXT_TYPE +
+            "CREATE TABLE " + ContactEntry.TABLE_NAME + " (" +
+                    ContactEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    ContactEntry._OWNER + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._NAME + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._SURNAME + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._EMAIL + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._ADDITIONAL_EMAIL + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._PHONE + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._SECOND_PHONE + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._THIRD_PHONE + TEXT_TYPE +
                     " )";
 
 

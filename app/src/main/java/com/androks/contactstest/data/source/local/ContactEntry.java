@@ -4,7 +4,7 @@ package com.androks.contactstest.data.source.local;
  * Created by androks on 15.07.17.
  */
 
-public interface ContactsPersistenceContract {
+public interface ContactEntry {
     String TABLE_NAME = "contact";
     String _ID = "id";
     String _OWNER = "owner";

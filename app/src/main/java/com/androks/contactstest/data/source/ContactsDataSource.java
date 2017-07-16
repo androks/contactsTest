@@ -4,7 +4,7 @@ import com.androks.contactstest.data.Contact;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -13,12 +13,16 @@ import io.reactivex.annotations.NonNull;
 
 public interface ContactsDataSource {
 
-    Flowable<List<Contact>> getContacts();
+    Observable<List<Contact>> getContacts(String ownerEmail);
 
-    Flowable<Contact> getContact(@NonNull String contactId);
+    Observable<List<Contact>> getContact(@NonNull String contactId);
 
     void saveContact(@NonNull Contact contact);
 
+    void deleteContact(@NonNull Contact contact);
+
     void deleteContact(@NonNull String contactId);
+
+    void deleteAllUserContact(@NonNull String ownerEmail);
 
 }
