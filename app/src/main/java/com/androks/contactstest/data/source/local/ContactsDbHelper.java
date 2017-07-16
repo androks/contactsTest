@@ -28,7 +28,8 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
                     ContactEntry._ADDITIONAL_EMAIL + TEXT_TYPE + COMMA_SEP +
                     ContactEntry._PHONE + TEXT_TYPE + COMMA_SEP +
                     ContactEntry._SECOND_PHONE + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._THIRD_PHONE + TEXT_TYPE +
+                    ContactEntry._THIRD_PHONE + TEXT_TYPE + COMMA_SEP +
+                    ContactEntry._CREATED_AT + TEXT_TYPE +
                     " )";
 
 

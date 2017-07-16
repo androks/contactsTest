@@ -15,4 +15,5 @@ public interface ContactEntry {
     String _PHONE = "phone";
     String _SECOND_PHONE = "second_phone";
     String _THIRD_PHONE = "third_phone";
+    String _CREATED_AT = "created_at";
 }

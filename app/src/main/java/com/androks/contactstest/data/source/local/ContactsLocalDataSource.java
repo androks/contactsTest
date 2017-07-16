@@ -53,6 +53,7 @@ public class ContactsLocalDataSource implements ContactsDataSource{
                 .secondPhone(c.getString(c.getColumnIndexOrThrow(ContactEntry._SECOND_PHONE)))
                 .thirdPhone(c.getString(c.getColumnIndexOrThrow(ContactEntry._THIRD_PHONE)))
                 .owner(c.getString(c.getColumnIndexOrThrow(ContactEntry._OWNER)))
+                .createAt(c.getString(c.getColumnIndexOrThrow(ContactEntry._CREATED_AT)))
                 .build();
     }
 
@@ -99,6 +100,7 @@ public class ContactsLocalDataSource implements ContactsDataSource{
         values.put(ContactEntry._PHONE, contact.getPhone());
         values.put(ContactEntry._SECOND_PHONE, contact.getSecondPhone());
         values.put(ContactEntry._THIRD_PHONE, contact.getThirdPhone());
+        values.put(ContactEntry._CREATED_AT, contact.getCreatedAt());
         databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 

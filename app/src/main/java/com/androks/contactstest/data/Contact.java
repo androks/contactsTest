@@ -1,6 +1,11 @@
 package com.androks.contactstest.data;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
+import com.androks.contactstest.util.DateTimeUtils;
+
+import java.util.Date;
 
 /**
  * Created by androks on 15.07.17.
@@ -24,6 +29,8 @@ public final class Contact {
     private String thirdPhone;
     private String additionalEmail;
 
+    private String createdAt;
+
     private Contact(Builder builder) {
         id = builder.id;
         owner = builder.owner;
@@ -34,6 +41,22 @@ public final class Contact {
         secondPhone = builder.secondPhone;
         thirdPhone = builder.thirdPhone;
         additionalEmail = builder.additionalEmail;
+        setCreatedAt(builder.createdAt);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
+    public void setCreatedAt(String date){
+        if(TextUtils.isEmpty(date))
+            createdAt = DateTimeUtils.dateToString(new Date());
+        else
+            createdAt = date;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 
     @NonNull
@@ -78,11 +101,6 @@ public final class Contact {
         return additionalEmail;
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-
     @Override
     public int hashCode() {
         int result = id.hashCode();
@@ -105,9 +123,6 @@ public final class Contact {
                 '}';
     }
 
-    /**
-     * {@code Contact} builder static inner class.
-     */
     public static final class Builder {
         private String id;
         private String owner;
@@ -118,114 +133,61 @@ public final class Contact {
         private String secondPhone;
         private String thirdPhone;
         private String additionalEmail;
+        private String createdAt;
 
         private Builder() {
         }
 
-        /**
-         * Sets the {@code id} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code id} to set
-         * @return a reference to this Builder
-         */
         public Builder id(String val) {
             id = val;
             return this;
         }
 
-        /**
-         * Sets the {@code owner} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code owner} to set
-         * @return a reference to this Builder
-         */
         public Builder owner(String val) {
             owner = val;
             return this;
         }
 
-        /**
-         * Sets the {@code name} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code name} to set
-         * @return a reference to this Builder
-         */
         public Builder name(String val) {
             name = val;
             return this;
         }
 
-        /**
-         * Sets the {@code surname} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code surname} to set
-         * @return a reference to this Builder
-         */
         public Builder surname(String val) {
             surname = val;
             return this;
         }
 
-        /**
-         * Sets the {@code email} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code email} to set
-         * @return a reference to this Builder
-         */
         public Builder email(String val) {
             email = val;
             return this;
         }
 
-        /**
-         * Sets the {@code phone} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code phone} to set
-         * @return a reference to this Builder
-         */
         public Builder phone(String val) {
             phone = val;
             return this;
         }
 
-        /**
-         * Sets the {@code secondPhone} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code secondPhone} to set
-         * @return a reference to this Builder
-         */
         public Builder secondPhone(String val) {
             secondPhone = val;
             return this;
         }
 
-        /**
-         * Sets the {@code thirdPhone} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code thirdPhone} to set
-         * @return a reference to this Builder
-         */
         public Builder thirdPhone(String val) {
             thirdPhone = val;
             return this;
         }
 
-        /**
-         * Sets the {@code additionalEmail} and returns a reference to this Builder so that the methods can be chained together.
-         *
-         * @param val the {@code additionalEmail} to set
-         * @return a reference to this Builder
-         */
         public Builder additionalEmail(String val) {
             additionalEmail = val;
             return this;
         }
 
-        /**
-         * Returns a {@code Contact} built from the parameters previously set.
-         *
-         * @return a {@code Contact} built with parameters of this {@code Contact.Builder}
-         */
+        public Builder createAt(String val) {
+            createdAt = val;
+            return this;
+        }
+
         public Contact build() {
             return new Contact(this);
         }
