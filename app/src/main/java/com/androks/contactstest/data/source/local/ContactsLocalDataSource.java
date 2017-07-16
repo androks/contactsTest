@@ -7,7 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.androks.contactstest.data.Contact;
+import com.androks.contactstest.data.entity.Email;
+import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.data.source.ContactsDataSource;
+import com.androks.contactstest.data.source.local.entries.ContactEntry;
+import com.androks.contactstest.data.source.local.entries.EmailEntry;
 import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
@@ -33,12 +37,40 @@ public class ContactsLocalDataSource implements ContactsDataSource{
     @NonNull
     private Function<Cursor, Contact> contactsMapperFunction;
 
+    @NonNull
+    private Function<Cursor, Email> emailMapperFunction;
+
+    @NonNull
+    private Function<Cursor, PhoneNumber> phoneNumberMapperFunction;
+
     private ContactsLocalDataSource(@NonNull Context context,
                                     @NonNull BaseSchedulerProvider schedulerProvider){
         ContactsDbHelper dbHelper = new ContactsDbHelper(context);
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, schedulerProvider.io());
         contactsMapperFunction = this::getContact;
+        emailMapperFunction = this::getEmail;
+        phoneNumberMapperFunction = this::getPhoneNumber;
+    }
+
+    @NonNull
+    private Email getEmail(@NonNull Cursor c){
+        return Email.newBuilder()
+                .id(c.getString(c.getColumnIndexOrThrow(EmailEntry._ID)))
+                .contactId(c.getString(c.getColumnIndexOrThrow(EmailEntry._CONTACT_ID)))
+                .email(c.getString(c.getColumnIndexOrThrow(EmailEntry._EMAIL)))
+                .label(c.getString(c.getColumnIndexOrThrow(EmailEntry._LABEL)))
+                .build();
+    }
+
+    @NonNull
+    private PhoneNumber getPhoneNumber(@NonNull Cursor c){
+        return PhoneNumber.newBuilder()
+                .id(c.getString(c.getColumnIndexOrThrow(EmailEntry._ID)))
+                .contactId(c.getString(c.getColumnIndexOrThrow(EmailEntry._CONTACT_ID)))
+                .phone(c.getString(c.getColumnIndexOrThrow(EmailEntry._EMAIL)))
+                .label(c.getString(c.getColumnIndexOrThrow(EmailEntry._LABEL)))
+                .build();
     }
 
     @NonNull
@@ -47,13 +79,8 @@ public class ContactsLocalDataSource implements ContactsDataSource{
                 .id(c.getString(c.getColumnIndexOrThrow(ContactEntry._ID)))
                 .name(c.getString(c.getColumnIndexOrThrow(ContactEntry._NAME)))
                 .surname(c.getString(c.getColumnIndexOrThrow(ContactEntry._SURNAME)))
-                .email(c.getString(c.getColumnIndexOrThrow(ContactEntry._EMAIL)))
-                .additionalEmail(c.getString(c.getColumnIndexOrThrow(ContactEntry._ADDITIONAL_EMAIL)))
-                .phone(c.getString(c.getColumnIndexOrThrow(ContactEntry._PHONE)))
-                .secondPhone(c.getString(c.getColumnIndexOrThrow(ContactEntry._SECOND_PHONE)))
-                .thirdPhone(c.getString(c.getColumnIndexOrThrow(ContactEntry._THIRD_PHONE)))
                 .owner(c.getString(c.getColumnIndexOrThrow(ContactEntry._OWNER)))
-                .createAt(c.getString(c.getColumnIndexOrThrow(ContactEntry._CREATED_AT)))
+                .createdAt(c.getString(c.getColumnIndexOrThrow(ContactEntry._CREATED_AT)))
                 .build();
     }
 
@@ -94,12 +121,6 @@ public class ContactsLocalDataSource implements ContactsDataSource{
         values.put(ContactEntry._ID, contact.getId());
         values.put(ContactEntry._OWNER, contact.getOwner());
         values.put(ContactEntry._NAME, contact.getName());
-        values.put(ContactEntry._SURNAME, contact.getSurname());
-        values.put(ContactEntry._EMAIL, contact.getEmail());
-        values.put(ContactEntry._ADDITIONAL_EMAIL, contact.getAdditionalEmail());
-        values.put(ContactEntry._PHONE, contact.getPhone());
-        values.put(ContactEntry._SECOND_PHONE, contact.getSecondPhone());
-        values.put(ContactEntry._THIRD_PHONE, contact.getThirdPhone());
         values.put(ContactEntry._CREATED_AT, contact.getCreatedAt());
         databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }

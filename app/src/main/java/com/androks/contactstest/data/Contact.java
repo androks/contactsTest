@@ -3,9 +3,13 @@ package com.androks.contactstest.data;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.androks.contactstest.data.entity.Email;
+import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by androks on 15.07.17.
@@ -20,14 +24,9 @@ public final class Contact {
     private String name;
     @NonNull
     private String surname;
-    @NonNull
-    private String email;
-    @NonNull
-    private String phone;
 
-    private String secondPhone;
-    private String thirdPhone;
-    private String additionalEmail;
+    private List<PhoneNumber> phones;
+    private List<Email> emails;
 
     private String createdAt;
 
@@ -36,27 +35,14 @@ public final class Contact {
         owner = builder.owner;
         name = builder.name;
         surname = builder.surname;
-        email = builder.email;
-        phone = builder.phone;
-        secondPhone = builder.secondPhone;
-        thirdPhone = builder.thirdPhone;
-        additionalEmail = builder.additionalEmail;
+        setCreatedAt(builder.createdAt);
+        phones = new ArrayList<>(builder.phones);
+        emails = new ArrayList<>(builder.emails);
         setCreatedAt(builder.createdAt);
     }
 
     public static Builder newBuilder() {
         return new Builder();
-    }
-
-    public void setCreatedAt(String date){
-        if(TextUtils.isEmpty(date))
-            createdAt = DateTimeUtils.dateToString(new Date());
-        else
-            createdAt = date;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
     }
 
     @NonNull
@@ -79,61 +65,42 @@ public final class Contact {
         return surname;
     }
 
-    @NonNull
-    public String getEmail() {
-        return email;
+    public List<PhoneNumber> getPhones() {
+        return phones;
     }
 
-    @NonNull
-    public String getPhone() {
-        return phone;
+    public List<Email> getEmails() {
+        return emails;
     }
 
-    public String getSecondPhone() {
-        return secondPhone;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public String getThirdPhone() {
-        return thirdPhone;
-    }
-
-    public String getAdditionalEmail() {
-        return additionalEmail;
+    public void setCreatedAt(String date){
+        if(TextUtils.isEmpty(date))
+            createdAt = DateTimeUtils.dateToString(new Date());
+        else
+            createdAt = date;
     }
 
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + email.hashCode();
-        result = 31 * result + phone.hashCode();
+        result = 31 * result + emails.get(0).hashCode();
+        result = 31 * result + phones.get(0).hashCode();
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", secondPhone='" + secondPhone + '\'' +
-                ", thirdPhone='" + thirdPhone + '\'' +
-                ", additionalEmail='" + additionalEmail + '\'' +
-                '}';
-    }
 
     public static final class Builder {
         private String id;
         private String owner;
         private String name;
         private String surname;
-        private String email;
-        private String phone;
-        private String secondPhone;
-        private String thirdPhone;
-        private String additionalEmail;
         private String createdAt;
+        private List<Email> emails = new ArrayList<>();
+        private List<PhoneNumber> phones = new ArrayList<>();
 
         private Builder() {
         }
@@ -158,33 +125,29 @@ public final class Contact {
             return this;
         }
 
-        public Builder email(String val) {
-            email = val;
-            return this;
-        }
-
-        public Builder phone(String val) {
-            phone = val;
-            return this;
-        }
-
-        public Builder secondPhone(String val) {
-            secondPhone = val;
-            return this;
-        }
-
-        public Builder thirdPhone(String val) {
-            thirdPhone = val;
-            return this;
-        }
-
-        public Builder additionalEmail(String val) {
-            additionalEmail = val;
-            return this;
-        }
-
-        public Builder createAt(String val) {
+        public Builder createdAt(String val) {
             createdAt = val;
+            return this;
+        }
+
+        public Builder addPhone(PhoneNumber phoneNumber){
+            phones.add(phoneNumber);
+            return this;
+        }
+
+        public Builder addEmail(Email email){
+            emails.add(email);
+            return this;
+        }
+
+
+        public Builder addPhones(List<PhoneNumber> phoneNumber){
+            phones.addAll(phoneNumber);
+            return this;
+        }
+
+        public Builder addEmails(List<Email> email){
+            emails.addAll(email);
             return this;
         }
 

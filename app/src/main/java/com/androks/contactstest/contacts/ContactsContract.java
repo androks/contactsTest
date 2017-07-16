@@ -10,7 +10,7 @@ import java.util.List;
  * Created by androks on 16.07.17.
  */
 
-public class ContactsContract {
+public interface ContactsContract {
 
     interface View extends BaseView<Presenter>{
 
@@ -21,8 +21,6 @@ public class ContactsContract {
         void showAddContact();
 
         void showNoContacts();
-
-
     }
 
 

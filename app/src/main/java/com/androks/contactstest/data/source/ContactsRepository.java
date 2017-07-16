@@ -18,23 +18,23 @@ public class ContactsRepository implements ContactsDataSource {
     private static ContactsRepository INSTANCE = null;
 
     @NonNull
-    private final ContactsDataSource contactlocalDataSource;
+    private final ContactsDataSource contactLocalDataSource;
 
 
     private ContactsRepository(@NonNull ContactsDataSource contactsLocalDataSource) {
-        this.contactlocalDataSource = contactsLocalDataSource;
+        this.contactLocalDataSource = contactsLocalDataSource;
 
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      *
-     * @param tasksLocalDataSource the device storage data source
+     * @param contactsLocalDataSource the device storage data source
      * @return the {@link ContactsRepository} instance
      */
-    public static ContactsRepository getInstance(@NonNull ContactsDataSource tasksLocalDataSource) {
+    public static ContactsRepository getInstance(@NonNull ContactsDataSource contactsLocalDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new ContactsRepository(tasksLocalDataSource);
+            INSTANCE = new ContactsRepository(contactsLocalDataSource);
         }
         return INSTANCE;
     }
@@ -50,32 +50,32 @@ public class ContactsRepository implements ContactsDataSource {
 
     @Override
     public Observable<List<Contact>> getContacts(String ownerEmail) {
-        return contactlocalDataSource.getContacts(ownerEmail);
+        return contactLocalDataSource.getContacts(ownerEmail);
     }
 
     @Override
     public Observable<List<Contact>> getContact(@NonNull String contactId) {
-        return contactlocalDataSource.getContact(contactId);
+        return contactLocalDataSource.getContact(contactId);
     }
 
     @Override
     public void saveContact(@NonNull Contact contact) {
-        contactlocalDataSource.saveContact(contact);
+        contactLocalDataSource.saveContact(contact);
     }
 
     @Override
     public void deleteContact(@NonNull Contact contact) {
-        contactlocalDataSource.deleteContact(contact);
+        contactLocalDataSource.deleteContact(contact);
     }
 
     @Override
     public void deleteContact(@NonNull String contactId) {
-        contactlocalDataSource.deleteContact(contactId);
+        contactLocalDataSource.deleteContact(contactId);
     }
 
     @Override
     public void deleteAllUserContact(@NonNull String ownerEmail) {
-        contactlocalDataSource.deleteAllUserContact(ownerEmail);
+        contactLocalDataSource.deleteAllUserContact(ownerEmail);
     }
 }
 

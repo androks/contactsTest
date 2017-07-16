@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.androks.contactstest.data.source.local.entries.ContactEntry;
+import com.androks.contactstest.data.source.local.entries.EmailEntry;
+import com.androks.contactstest.data.source.local.entries.PhoneNumberEntry;
+
 /**
  * Created by androks on 15.07.17.
  */
@@ -24,14 +28,28 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
                     ContactEntry._OWNER + TEXT_TYPE + COMMA_SEP +
                     ContactEntry._NAME + TEXT_TYPE + COMMA_SEP +
                     ContactEntry._SURNAME + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._EMAIL + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._ADDITIONAL_EMAIL + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._PHONE + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._SECOND_PHONE + TEXT_TYPE + COMMA_SEP +
-                    ContactEntry._THIRD_PHONE + TEXT_TYPE + COMMA_SEP +
                     ContactEntry._CREATED_AT + TEXT_TYPE +
                     " )";
 
+    private static final String SQL_CREATE_EMAILS_TABLE =
+            "CREATE TABLE " + EmailEntry.TABLE_NAME + " (" +
+                    EmailEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    EmailEntry._CONTACT_ID + TEXT_TYPE + " NOT NULL," +
+                    EmailEntry._EMAIL + TEXT_TYPE + COMMA_SEP +
+                    EmailEntry._LABEL + TEXT_TYPE + COMMA_SEP +
+                    "FOREIGN KEY " + "(" + EmailEntry._CONTACT_ID + ") " +
+                    "REFERENCES " + ContactEntry.TABLE_NAME + "(" + ContactEntry._ID + ")" +
+                    " )";
+
+    private static final String SQL_CREATE_PHONE_NUMBERS_TABLE =
+            "CREATE TABLE " + PhoneNumberEntry.TABLE_NAME + " (" +
+                    PhoneNumberEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    PhoneNumberEntry._CONTACT_ID + TEXT_TYPE + " NOT NULL," +
+                    PhoneNumberEntry._PHONE + TEXT_TYPE + COMMA_SEP +
+                    PhoneNumberEntry._LABEL + TEXT_TYPE + COMMA_SEP +
+                    "FOREIGN KEY " + "(" + PhoneNumberEntry._CONTACT_ID + ") " +
+                    "REFERENCES " + ContactEntry.TABLE_NAME + "(" + ContactEntry._ID + ")" +
+                    " )";
 
     public ContactsDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,6 +58,8 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_CONTACTS_TABLE);
+        db.execSQL(SQL_CREATE_EMAILS_TABLE);
+        db.execSQL(SQL_CREATE_PHONE_NUMBERS_TABLE);
     }
 
     @Override
