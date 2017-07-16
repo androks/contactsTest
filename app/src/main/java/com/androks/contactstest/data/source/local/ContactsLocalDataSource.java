@@ -6,12 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
-import com.androks.contactstest.data.Contact;
+import com.androks.contactstest.data.entity.Contact;
 import com.androks.contactstest.data.entity.Email;
 import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.data.source.ContactsDataSource;
 import com.androks.contactstest.data.source.local.entries.ContactEntry;
 import com.androks.contactstest.data.source.local.entries.EmailEntry;
+import com.androks.contactstest.data.source.local.entries.PhoneNumberEntry;
 import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
@@ -26,7 +27,7 @@ import io.reactivex.functions.Function;
  * Created by androks on 15.07.17.
  */
 
-public class ContactsLocalDataSource implements ContactsDataSource{
+public class ContactsLocalDataSource implements ContactsDataSource {
 
     @Nullable
     private static ContactsLocalDataSource INSTANCE;
@@ -44,7 +45,7 @@ public class ContactsLocalDataSource implements ContactsDataSource{
     private Function<Cursor, PhoneNumber> phoneNumberMapperFunction;
 
     private ContactsLocalDataSource(@NonNull Context context,
-                                    @NonNull BaseSchedulerProvider schedulerProvider){
+                                    @NonNull BaseSchedulerProvider schedulerProvider) {
         ContactsDbHelper dbHelper = new ContactsDbHelper(context);
         SqlBrite sqlBrite = new SqlBrite.Builder().build();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, schedulerProvider.io());
@@ -54,7 +55,7 @@ public class ContactsLocalDataSource implements ContactsDataSource{
     }
 
     @NonNull
-    private Email getEmail(@NonNull Cursor c){
+    private Email getEmail(@NonNull Cursor c) {
         return Email.newBuilder()
                 .id(c.getString(c.getColumnIndexOrThrow(EmailEntry._ID)))
                 .contactId(c.getString(c.getColumnIndexOrThrow(EmailEntry._CONTACT_ID)))
@@ -64,7 +65,7 @@ public class ContactsLocalDataSource implements ContactsDataSource{
     }
 
     @NonNull
-    private PhoneNumber getPhoneNumber(@NonNull Cursor c){
+    private PhoneNumber getPhoneNumber(@NonNull Cursor c) {
         return PhoneNumber.newBuilder()
                 .id(c.getString(c.getColumnIndexOrThrow(EmailEntry._ID)))
                 .contactId(c.getString(c.getColumnIndexOrThrow(EmailEntry._CONTACT_ID)))
@@ -102,25 +103,53 @@ public class ContactsLocalDataSource implements ContactsDataSource{
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 ContactEntry.TABLE_NAME,
                 ContactEntry._OWNER);
+
         return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, ownerEmail)
-                .mapToList(contactsMapperFunction);
+                .mapToList(contactsMapperFunction).flatMap(Observable::fromIterable)
+                .map(contact -> {
+                    getEmails(contact.getId()).map(email -> {
+                        contact.addEmail(email);
+                        return email;
+                    });
+                    getPhoneNumbers(contact.getId()).map(phoneNumber -> {
+                       contact.addPhoneNumber(phoneNumber);
+                        return phoneNumber;
+                    });
+                    return contact;
+                }).toList().toObservable();
     }
 
     @Override
-    public Observable<List<Contact>> getContact(@NonNull String contactId) {
-        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+    public Observable<Contact> getContact(@NonNull String contactId) {
+        String sql = String.format("SELECT * FROM %s WHERE contact.id LIKE ?",
                 ContactEntry.TABLE_NAME,
                 ContactEntry._ID);
         return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, contactId)
-                .mapToList(contactsMapperFunction);
+                .mapToOneOrDefault(contactsMapperFunction, null)
+                .map(contact -> {
+                    getEmails(contact.getId()).map(email -> {
+                        contact.addEmail(email);
+                        return email;
+                    });
+                    getPhoneNumbers(contact.getId()).map(phoneNumber -> {
+                        contact.addPhoneNumber(phoneNumber);
+                        return phoneNumber;
+                    });
+                    return contact;
+                });
     }
 
     @Override
     public void saveContact(@NonNull Contact contact) {
+        for (Email email : contact.getEmails())
+            saveEmail(email);
+        for (PhoneNumber phoneNumber : contact.getPhones())
+            savePhoneNumber(phoneNumber);
         ContentValues values = new ContentValues();
         values.put(ContactEntry._ID, contact.getId());
         values.put(ContactEntry._OWNER, contact.getOwner());
         values.put(ContactEntry._NAME, contact.getName());
+        values.put(ContactEntry._SURNAME, contact.getSurname());
         values.put(ContactEntry._CREATED_AT, contact.getCreatedAt());
         databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -138,5 +167,66 @@ public class ContactsLocalDataSource implements ContactsDataSource{
     @Override
     public void deleteAllUserContact(@NonNull String ownerEmail) {
         databaseHelper.delete(ContactEntry.TABLE_NAME, ContactEntry._OWNER + " LIKE ?", ownerEmail);
+    }
+
+    private void saveEmail(@NonNull Email email) {
+        ContentValues values = new ContentValues();
+        values.put(EmailEntry._ID, email.getId());
+        values.put(EmailEntry._CONTACT_ID, email.getContactId());
+        values.put(EmailEntry._EMAIL, email.getEmail());
+        values.put(EmailEntry._LABEL, email.getLabel());
+        databaseHelper.insert(EmailEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    private void deleteEmail(@NonNull Email email) {
+        deleteEmail(email.getId());
+    }
+
+    private void deleteEmail(@NonNull String emailId) {
+        databaseHelper.delete(EmailEntry.TABLE_NAME, EmailEntry._ID + " LIKE ?", emailId);
+    }
+
+    private void savePhoneNumber(@NonNull PhoneNumber phoneNumber) {
+        ContentValues values = new ContentValues();
+        values.put(PhoneNumberEntry._ID, phoneNumber.getId());
+        values.put(PhoneNumberEntry._CONTACT_ID, phoneNumber.getContactId());
+        values.put(PhoneNumberEntry._PHONE, phoneNumber.getPhone());
+        values.put(PhoneNumberEntry._LABEL, phoneNumber.getLabel());
+        databaseHelper.insert(PhoneNumberEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
+    private void deletePhoneNumber(@NonNull PhoneNumber phoneNumber) {
+        deletePhoneNumber(phoneNumber.getId());
+    }
+
+    private void deletePhoneNumber(@NonNull String phoneNumberId) {
+        databaseHelper.delete(PhoneNumberEntry.TABLE_NAME, PhoneNumberEntry._ID
+                + " LIKE ?", phoneNumberId);
+    }
+
+    /**
+     *
+     * @param contactId
+     * @return the flow of contact's emails with the id = contactId
+     */
+    public Observable<Email> getEmails(String contactId) {
+        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+                EmailEntry.TABLE_NAME,
+                EmailEntry._CONTACT_ID);
+        return databaseHelper.createQuery(EmailEntry.TABLE_NAME, sql, contactId)
+                .mapToList(emailMapperFunction).flatMap(Observable::fromIterable);
+    }
+
+    /**
+     *
+     * @param contactId
+     * @return the flow of contact's PhoneNumbers with the id = contactId
+     */
+    public Observable<PhoneNumber> getPhoneNumbers(String contactId) {
+        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+                PhoneNumberEntry.TABLE_NAME,
+                PhoneNumberEntry._CONTACT_ID);
+        return databaseHelper.createQuery(PhoneNumberEntry.TABLE_NAME, sql, contactId)
+                .mapToList(phoneNumberMapperFunction).flatMap(Observable::fromIterable);
     }
 }

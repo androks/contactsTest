@@ -22,6 +22,22 @@ public final class PhoneNumber {
     }
 
 
+    public String getId() {
+        return id;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
     public static final class Builder {
         private String id;
         private String contactId;

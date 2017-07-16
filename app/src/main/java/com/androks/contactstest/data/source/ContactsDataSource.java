@@ -1,6 +1,6 @@
 package com.androks.contactstest.data.source;
 
-import com.androks.contactstest.data.Contact;
+import com.androks.contactstest.data.entity.Contact;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface ContactsDataSource {
 
     Observable<List<Contact>> getContacts(String ownerEmail);
 
-    Observable<List<Contact>> getContact(@NonNull String contactId);
+    Observable<Contact> getContact(@NonNull String contactId);
 
     void saveContact(@NonNull Contact contact);
 

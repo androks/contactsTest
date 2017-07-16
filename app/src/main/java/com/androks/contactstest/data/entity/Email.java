@@ -17,6 +17,22 @@ public final class Email {
         label = builder.label;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getContactId() {
+        return contactId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }

@@ -38,7 +38,8 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
                     EmailEntry._EMAIL + TEXT_TYPE + COMMA_SEP +
                     EmailEntry._LABEL + TEXT_TYPE + COMMA_SEP +
                     "FOREIGN KEY " + "(" + EmailEntry._CONTACT_ID + ") " +
-                    "REFERENCES " + ContactEntry.TABLE_NAME + "(" + ContactEntry._ID + ")" +
+                    "REFERENCES " + ContactEntry.TABLE_NAME + "(" + ContactEntry._ID + ") " +
+                    "ON DELETE CASCADE " + "ON UPDATE CASCADE" +
                     " )";
 
     private static final String SQL_CREATE_PHONE_NUMBERS_TABLE =
@@ -49,6 +50,7 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
                     PhoneNumberEntry._LABEL + TEXT_TYPE + COMMA_SEP +
                     "FOREIGN KEY " + "(" + PhoneNumberEntry._CONTACT_ID + ") " +
                     "REFERENCES " + ContactEntry.TABLE_NAME + "(" + ContactEntry._ID + ")" +
+                    "ON DELETE CASCADE " + "ON UPDATE CASCADE" +
                     " )";
 
     public ContactsDbHelper(Context context) {
@@ -65,5 +67,11 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Not required yet
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        db.execSQL("PRAGMA foreign_keys=ON;");
     }
 }

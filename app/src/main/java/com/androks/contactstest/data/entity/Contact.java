@@ -1,15 +1,14 @@
-package com.androks.contactstest.data;
+package com.androks.contactstest.data.entity;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.androks.contactstest.data.entity.Email;
-import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by androks on 15.07.17.
@@ -25,13 +24,13 @@ public final class Contact {
     @NonNull
     private String surname;
 
-    private List<PhoneNumber> phones;
-    private List<Email> emails;
+    private List<PhoneNumber> phones = new ArrayList<>();
+    private List<Email> emails = new ArrayList<>();
 
     private String createdAt;
 
     private Contact(Builder builder) {
-        id = builder.id;
+        setId(builder.id);
         owner = builder.owner;
         name = builder.name;
         surname = builder.surname;
@@ -43,6 +42,22 @@ public final class Contact {
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public void addEmail(Email email){
+        emails.add(email);
+    }
+
+    public void addPhoneNumber(PhoneNumber phoneNumber){
+        phones.add(phoneNumber);
+    }
+
+    public void setPhones(List<PhoneNumber> phones) {
+        this.phones = phones;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
     }
 
     @NonNull
@@ -84,6 +99,12 @@ public final class Contact {
             createdAt = date;
     }
 
+    public void setId(String id){
+        if(TextUtils.isEmpty(id))
+            this.id = UUID.randomUUID().toString();
+        else
+            this.id = id;
+    }
     @Override
     public int hashCode() {
         int result = id.hashCode();

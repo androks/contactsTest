@@ -1,6 +1,6 @@
 package com.androks.contactstest.data.source;
 
-import com.androks.contactstest.data.Contact;
+import com.androks.contactstest.data.entity.Contact;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class ContactsRepository implements ContactsDataSource {
     }
 
     @Override
-    public Observable<List<Contact>> getContact(@NonNull String contactId) {
+    public Observable<Contact> getContact(@NonNull String contactId) {
         return contactLocalDataSource.getContact(contactId);
     }
 

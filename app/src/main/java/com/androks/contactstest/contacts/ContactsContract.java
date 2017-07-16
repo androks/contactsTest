@@ -2,7 +2,7 @@ package com.androks.contactstest.contacts;
 
 import com.androks.contactstest.BasePresenter;
 import com.androks.contactstest.BaseView;
-import com.androks.contactstest.data.Contact;
+import com.androks.contactstest.data.entity.Contact;
 
 import java.util.List;
 
