@@ -86,8 +86,8 @@ public class ContactsLocalDataSource implements ContactsDataSource {
     }
 
     public static ContactsLocalDataSource getInstance(
-            @android.support.annotation.NonNull Context context,
-            @android.support.annotation.NonNull BaseSchedulerProvider schedulerProvider) {
+            @NonNull Context context,
+            @NonNull BaseSchedulerProvider schedulerProvider) {
         if (INSTANCE == null) {
             INSTANCE = new ContactsLocalDataSource(context, schedulerProvider);
         }
