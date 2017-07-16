@@ -21,14 +21,15 @@ public class ContactsRepository implements ContactsDataSource {
     private final ContactsDataSource contactlocalDataSource;
 
 
-    private ContactsRepository(@NonNull ContactsDataSource contactsLocalDataSource){
+    private ContactsRepository(@NonNull ContactsDataSource contactsLocalDataSource) {
         this.contactlocalDataSource = contactsLocalDataSource;
+
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      *
-     * @param tasksLocalDataSource  the device storage data source
+     * @param tasksLocalDataSource the device storage data source
      * @return the {@link ContactsRepository} instance
      */
     public static ContactsRepository getInstance(@NonNull ContactsDataSource tasksLocalDataSource) {
@@ -46,23 +47,35 @@ public class ContactsRepository implements ContactsDataSource {
         INSTANCE = null;
     }
 
+
     @Override
-    public Observable<List<Contact>> getContacts() {
-        return null;
+    public Observable<List<Contact>> getContacts(String ownerEmail) {
+        return contactlocalDataSource.getContacts(ownerEmail);
     }
 
     @Override
     public Observable<List<Contact>> getContact(@NonNull String contactId) {
-        return null;
+        return contactlocalDataSource.getContact(contactId);
     }
 
     @Override
     public void saveContact(@NonNull Contact contact) {
+        contactlocalDataSource.saveContact(contact);
+    }
 
+    @Override
+    public void deleteContact(@NonNull Contact contact) {
+        contactlocalDataSource.deleteContact(contact);
     }
 
     @Override
     public void deleteContact(@NonNull String contactId) {
+        contactlocalDataSource.deleteContact(contactId);
+    }
 
+    @Override
+    public void deleteAllUserContact(@NonNull String ownerEmail) {
+        contactlocalDataSource.deleteAllUserContact(ownerEmail);
     }
 }
+
