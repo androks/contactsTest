@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.androks.contactstest.R;
+import com.androks.contactstest.data.source.ContactsRepository;
 import com.androks.contactstest.util.ActivityUtils;
+import com.androks.contactstest.util.ProvideUtils;
 
 public class ContactsActivity extends AppCompatActivity {
 
@@ -30,7 +32,11 @@ public class ContactsActivity extends AppCompatActivity {
         }
 
         //Create the presenter
-        presenter = new ContactsPresenter();
+        presenter = new ContactsPresenter(
+                ContactsRepository.getInstance(ProvideUtils.provideContactsRepository(this)),
+                contactsFragment,
+                ProvideUtils.provideScheduleProvider()
+        );
     }
 
 
