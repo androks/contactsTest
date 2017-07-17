@@ -56,6 +56,7 @@ dependencies {
     compile "com.google.guava:guava:$rootProject.guavaVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
     compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
+    compile "com.jakewharton.rxbinding2:rxbinding:$rootProject.rxjavaBindingVersion"
     compile "com.squareup.sqlbrite2:sqlbrite:$rootProject.sqlbriteVersion"
 
 

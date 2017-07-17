@@ -63,13 +63,18 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        setUpFab();
-
         setUpRecyclerView();
 
         showMessage(DebugDB.getAddressLog());
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setUpFab();
     }
 
     private void setUpRecyclerView() {
@@ -142,7 +147,7 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         //TODO: write show contact UI implementation
     }
 
-    private void implementContactItemListener(){
+    private void implementContactItemListener() {
         contactItemListener = new ContactItemListener() {
             @Override
             public void OnContactClick(Contact clickedContact) {

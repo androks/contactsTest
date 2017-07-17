@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.androks.contactstest.R;
 import com.androks.contactstest.util.ActivityUtils;
+import com.androks.contactstest.util.ProvideUtils;
 
 public class AddEditContactActivity extends AppCompatActivity {
 
@@ -21,8 +22,6 @@ public class AddEditContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_contact);
 
-        initFragment();
-
         boolean shouldLoadDataFromRepo = true;
 
         // Prevent the presenter from loading data from the repository if this is a config change.
@@ -31,16 +30,12 @@ public class AddEditContactActivity extends AppCompatActivity {
             shouldLoadDataFromRepo = savedInstanceState.getBoolean(SHOULD_LOAD_DATA_FROM_REPO_KEY);
         }
 
-        //Create the presenter
-    }
-
-    private void initFragment() {
         AddEditContactFragment addEditContactFragment =
                 (AddEditContactFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 
         String contactId = getIntent().getStringExtra(AddEditContactFragment.ARGUMENT_EDIT_CONTACT_ID);
 
-        if(addEditContactFragment == null){
+        if (addEditContactFragment == null) {
             addEditContactFragment = new AddEditContactFragment().newInstance();
 
             setUpToolbar(getIntent().hasExtra(AddEditContactFragment.ARGUMENT_EDIT_CONTACT_ID));
@@ -48,14 +43,22 @@ public class AddEditContactActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     addEditContactFragment, R.id.contentFrame);
         }
-    }
 
-    private void setUpToolbar(boolean newContact){
+        //Create the presenter
+        presenter = new AddEditContactPresenter(
+                contactId,
+                ProvideUtils.provideContactsRepository(getApplicationContext()),
+                addEditContactFragment,
+                shouldLoadDataFromRepo,
+                ProvideUtils.provideScheduleProvider()
+        );
+    }
+    private void setUpToolbar(boolean newContact) {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        if(newContact){
+        if (newContact) {
             actionBar.setTitle(R.string.edit_contact);
         } else {
             actionBar.setTitle(R.string.add_contact);

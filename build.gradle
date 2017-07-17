@@ -37,8 +37,9 @@ ext {
     junitVersion = '4.12'
     rxjavaVersion = '2.1.1'
     rxandroidVersion = '2.0.1'
+    rxjavaBindingVersion = '2.0.0'
     sqlbriteVersion = '2.0.0'
     playServisesVersion = '11.0.2'
     firebaseAuthVersion= '2.0.1'
-    butterKnifeVersion = '8.7.0 '
+    butterKnifeVersion = '8.7.0'
 }

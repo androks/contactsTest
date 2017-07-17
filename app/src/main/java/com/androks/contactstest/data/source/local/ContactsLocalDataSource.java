@@ -145,10 +145,6 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
     @Override
     public void saveContact(@NonNull Contact contact) {
-
-        contact.getEmails().forEach(this::saveEmail);
-        contact.getPhones().forEach(this::savePhoneNumber);
-
         ContentValues values = new ContentValues();
         values.put(ContactEntry._ID, contact.getId());
         values.put(ContactEntry._OWNER, contact.getOwner());
@@ -156,6 +152,11 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         values.put(ContactEntry._SURNAME, contact.getSurname());
         values.put(ContactEntry._CREATED_AT, contact.getCreatedAt());
         databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        Observable.fromIterable(contact.getEmails())
+                .subscribe(this::saveEmail);
+        Observable.fromIterable(contact.getPhones())
+                .subscribe(this::savePhoneNumber);
     }
 
     @Override

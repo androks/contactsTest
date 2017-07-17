@@ -6,4 +6,8 @@
     <string name="label">Label</string>
     <string name="edit_contact">Edit contact</string>
     <string name="add_contact">Add Contact</string>
+    <string name="field_required">Required</string>
+    <string name="no_emails_error">Please, fill in at least one email</string>
+    <string name="no_phones_error">Please, fill in at least one phone</string>
+    <string name="unknown_error">Some error occured</string>
 </resources>

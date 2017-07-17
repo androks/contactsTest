@@ -30,6 +30,10 @@ public interface AddEditContactContract {
         void setPhoneNumbers(List<PhoneNumber> phoneNumbers);
 
         void showUnknownError();
+
+        void showNewEmailInputLayout();
+
+        void showNewPhoneInputLayout();
     }
 
     interface Presenter extends BasePresenter {
@@ -40,8 +44,12 @@ public interface AddEditContactContract {
                          List<MultiImputedViewsViewHolder> phones
         );
 
-        void populateTask();
+        void populateContact();
 
         boolean isDataMissing();
+
+        void addNewEmailInputLayout();
+
+        void addNewPhoneInputLayout();
     }
 }

@@ -58,7 +58,15 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Override
     public void subscribe() {
         if (!isNewTask() && isDataMissing)
-            populateTask();
+            populateContact();
+        else{
+            initNewContact();
+        }
+    }
+
+    private void initNewContact() {
+        view.showNewPhoneInputLayout();
+        view.showNewEmailInputLayout();
     }
 
     @Override
@@ -71,12 +79,15 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
                             String surname,
                             List<MultiImputedViewsViewHolder> emailViews,
                             List<MultiImputedViewsViewHolder> phoneViews) {
-        saveContact(Contact.newBuilder()
-                .addEmails(convertViewsToEmails(emailViews))
-                .addPhones(convertViewsToPhones(phoneViews))
+        Contact contact = Contact.newBuilder()
                 .name(name)
                 .surname(surname)
-                .build());
+                .build();
+        if(isNewTask())
+            contactId = contact.getId();
+        contact.addEmails(convertViewsToEmails(emailViews));
+        contact.addPhoneNumbers(convertViewsToPhones(phoneViews));
+        saveContact(contact);
     }
 
     private boolean validateContact(Contact contact) {
@@ -94,6 +105,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
             return false;
         } else
             return true;
+
     }
 
     private void saveContact(Contact contact) {
@@ -105,11 +117,13 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<PhoneNumber> convertViewsToPhones(List<MultiImputedViewsViewHolder> phoneViews) {
         List<PhoneNumber> phones = new ArrayList<>(phoneViews.size());
+        if(phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
+            return phones;
         for (MultiImputedViewsViewHolder view : phoneViews) {
             phones.add(PhoneNumber.newBuilder()
-                    .contactId(getCurrentuserEmail())
-                    .phone(view.data.toString())
-                    .label(view.data.toString())
+                    .contactId(contactId)
+                    .phone(view.data.getText().toString())
+                    .label(view.data.getText().toString())
                     .build());
         }
         return phones;
@@ -117,18 +131,20 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<Email> convertViewsToEmails(List<MultiImputedViewsViewHolder> emailViews) {
         List<Email> emails = new ArrayList<>(emailViews.size());
+        if(emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
+            return emails;
         for (MultiImputedViewsViewHolder view : emailViews) {
             emails.add(Email.newBuilder()
-                    .contactId(getCurrentuserEmail())
-                    .email(view.data.toString())
-                    .label(view.data.toString())
+                    .contactId(contactId)
+                    .email(view.data.getText().toString())
+                    .label(view.data.getText().toString())
                     .build());
         }
         return emails;
     }
 
     @Override
-    public void populateTask() {
+    public void populateContact() {
         subscriptions.add(contactsRepository
                 .getContact(contactId)
                 .subscribeOn(schedulerProvider.computation())
@@ -152,11 +168,21 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         return isDataMissing;
     }
 
+    @Override
+    public void addNewEmailInputLayout() {
+        view.showNewEmailInputLayout();
+    }
+
+    @Override
+    public void addNewPhoneInputLayout() {
+        view.showNewPhoneInputLayout();
+    }
+
     private boolean isNewTask() {
         return contactId == null;
     }
 
-    private String getCurrentuserEmail() {
+    private String getCurrentUserEmail() {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
 }
