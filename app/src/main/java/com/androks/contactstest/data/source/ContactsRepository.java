@@ -2,8 +2,6 @@ package com.androks.contactstest.data.source;
 
 import com.androks.contactstest.data.entity.Contact;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
@@ -49,7 +47,7 @@ public class ContactsRepository implements ContactsDataSource {
 
 
     @Override
-    public Observable<List<Contact>> getContacts(String ownerEmail) {
+    public Observable<Contact> getContacts(String ownerEmail) {
         return contactLocalDataSource.getContacts(ownerEmail);
     }
 

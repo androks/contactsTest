@@ -6,6 +6,8 @@ import com.androks.contactstest.data.entity.Contact;
 
 import java.util.List;
 
+import io.reactivex.annotations.NonNull;
+
 /**
  * Created by androks on 16.07.17.
  */
@@ -18,9 +20,13 @@ public interface ContactsContract {
 
         void showContacts(List<Contact> contacts);
 
-        void showAddContact();
+        void showAddNewContact();
 
         void showNoContacts();
+
+        void showLoadingContactsError();
+
+        void showContactDetailsUI(String contactId);
     }
 
 
@@ -32,6 +38,6 @@ public interface ContactsContract {
 
         void addNewContact();
 
-        void openContactDetails();
+        void openContactDetails(@NonNull Contact requestedTask);
     }
 }

@@ -17,8 +17,6 @@ import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -99,7 +97,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
     }
 
     @Override
-    public Observable<List<Contact>> getContacts(String ownerEmail) {
+    public Observable<Contact> getContacts(String ownerEmail) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 ContactEntry.TABLE_NAME,
                 ContactEntry._OWNER);
@@ -116,7 +114,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
                         return phoneNumber;
                     });
                     return contact;
-                }).toList().toObservable();
+                });
     }
 
     @Override
