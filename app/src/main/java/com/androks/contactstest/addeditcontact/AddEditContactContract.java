@@ -11,7 +11,13 @@ public interface AddEditContactContract {
 
     interface View extends BaseView<Presenter>{
 
-        void showEmptyContactError();
+        void showEmptyNameError();
+
+        void showEmptySurnameError();
+
+        void showNoEmailError();
+
+        void showNoPhoneError();
 
         void showContactsList();
 
@@ -22,6 +28,8 @@ public interface AddEditContactContract {
         void setEmails(List<Email> emails);
 
         void setPhoneNumbers(List<PhoneNumber> phoneNumbers);
+
+        void showUnknownError();
     }
 
     interface Presenter extends BasePresenter {
