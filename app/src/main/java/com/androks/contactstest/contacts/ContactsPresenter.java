@@ -59,6 +59,11 @@ public class ContactsPresenter implements ContactsContract.Presenter {
         loadContacts(true);
     }
 
+    @Override
+    public void addNewContact() {
+        view.showAddNewContactUI();
+    }
+
     private void loadContacts(boolean showLoadingUI) {
         view.setLoadingIndicator(showLoadingUI);
 
@@ -89,10 +94,6 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     }
 
-    @Override
-    public void addNewContact() {
-        view.showAddNewContact();
-    }
 
     @Override
     public void openContactDetails(@NonNull Contact requestedTask) {

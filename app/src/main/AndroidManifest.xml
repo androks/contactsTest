@@ -25,6 +25,10 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".contacts.ContactsActivity">
         </activity>
+        <activity android:name=".addeditcontact.AddEditContactActivity">
+        </activity>
+        <activity android:name=".contactdetail.ActivityContactDetail">
+        </activity>
     </application>
 
 </manifest>
