@@ -23,10 +23,11 @@ public final class Contact {
     private String name;
     @NonNull
     private String surname;
-
-    private List<PhoneNumber> phones = new ArrayList<>();
-    private List<Email> emails = new ArrayList<>();
-
+    @NonNull
+    private List<PhoneNumber> phones;
+    @NonNull
+    private List<Email> emails;
+    @NonNull
     private String createdAt;
 
     private Contact(Builder builder) {
@@ -44,12 +45,12 @@ public final class Contact {
         return new Builder();
     }
 
-    public void addEmail(Email email){
-        emails.add(email);
+    public void addEmails(List<Email> email){
+        emails = new ArrayList<>(email);
     }
 
-    public void addPhoneNumber(PhoneNumber phoneNumber){
-        phones.add(phoneNumber);
+    public void addPhoneNumbers(List<PhoneNumber> phoneNumber){
+        phones = new ArrayList<>(phoneNumber);
     }
 
     public void setPhones(List<PhoneNumber> phones) {

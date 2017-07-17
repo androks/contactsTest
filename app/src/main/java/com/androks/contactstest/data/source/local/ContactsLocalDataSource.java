@@ -15,8 +15,10 @@ import com.androks.contactstest.data.source.local.entries.EmailEntry;
 import com.androks.contactstest.data.source.local.entries.PhoneNumberEntry;
 import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
+import com.squareup.sqlbrite2.QueryObservable;
 import com.squareup.sqlbrite2.SqlBrite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -67,10 +69,10 @@ public class ContactsLocalDataSource implements ContactsDataSource {
     @NonNull
     private PhoneNumber getPhoneNumber(@NonNull Cursor c) {
         return PhoneNumber.newBuilder()
-                .id(c.getString(c.getColumnIndexOrThrow(EmailEntry._ID)))
-                .contactId(c.getString(c.getColumnIndexOrThrow(EmailEntry._CONTACT_ID)))
-                .phone(c.getString(c.getColumnIndexOrThrow(EmailEntry._EMAIL)))
-                .label(c.getString(c.getColumnIndexOrThrow(EmailEntry._LABEL)))
+                .id(c.getString(c.getColumnIndexOrThrow(PhoneNumberEntry._ID)))
+                .contactId(c.getString(c.getColumnIndexOrThrow(PhoneNumberEntry._CONTACT_ID)))
+                .phone(c.getString(c.getColumnIndexOrThrow(PhoneNumberEntry._PHONE)))
+                .label(c.getString(c.getColumnIndexOrThrow(PhoneNumberEntry._LABEL)))
                 .build();
     }
 
@@ -105,19 +107,20 @@ public class ContactsLocalDataSource implements ContactsDataSource {
                 ContactEntry._OWNER);
 
         return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, ownerEmail)
-                .mapToList(contactsMapperFunction).map(contacts -> {
-                    for(Contact contact: contacts){
-                        getEmails(contact.getId()).map(email -> {
-                            contact.addEmail(email);
-                            return email;
+                .mapToList(contactsMapperFunction).flatMap(
+                        list -> {
+                            Observable<Contact> contactsObj = Observable.fromIterable(list);
+                            return Observable.zip(
+                                    contactsObj,
+                                    contactsObj.flatMap(contact -> getPhoneNumbers(contact.getId())),
+                                    contactsObj.flatMap(contact -> getEmails(contact.getId())),
+                                    (contact, phoneNumbers, emails) -> {
+                                        contact.addPhoneNumbers(phoneNumbers);
+                                        contact.addEmails(emails);
+                                        return contact;
+                                    }
+                            ).toList().toObservable();
                         });
-                        getPhoneNumbers(contact.getId()).map(phoneNumber -> {
-                            contact.addPhoneNumber(phoneNumber);
-                            return phoneNumber;
-                        });
-                    }
-                    return contacts;
-                });
     }
 
     @Override
@@ -128,13 +131,13 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, contactId)
                 .mapToOneOrDefault(contactsMapperFunction, null)
                 .map(contact -> {
-                    getEmails(contact.getId()).map(email -> {
-                        contact.addEmail(email);
-                        return email;
+                    getEmails(contact.getId()).map(emails -> {
+                        contact.addEmails(emails);
+                        return emails;
                     });
-                    getPhoneNumbers(contact.getId()).map(phoneNumber -> {
-                        contact.addPhoneNumber(phoneNumber);
-                        return phoneNumber;
+                    getPhoneNumbers(contact.getId()).map(phoneNumbers -> {
+                        contact.addPhoneNumbers(phoneNumbers);
+                        return phoneNumbers;
                     });
                     return contact;
                 });
@@ -145,7 +148,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
         contact.getEmails().forEach(this::saveEmail);
         contact.getPhones().forEach(this::savePhoneNumber);
-        
+
         ContentValues values = new ContentValues();
         values.put(ContactEntry._ID, contact.getId());
         values.put(ContactEntry._OWNER, contact.getOwner());
@@ -206,28 +209,34 @@ public class ContactsLocalDataSource implements ContactsDataSource {
     }
 
     /**
-     *
      * @param contactId
      * @return the flow of contact's emails with the id = contactId
      */
-    public Observable<Email> getEmails(String contactId) {
+    private Observable<List<Email>> getEmails(String contactId) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 EmailEntry.TABLE_NAME,
                 EmailEntry._CONTACT_ID);
         return databaseHelper.createQuery(EmailEntry.TABLE_NAME, sql, contactId)
-                .mapToList(emailMapperFunction).flatMap(Observable::fromIterable);
+                .mapToList(emailMapperFunction);
     }
 
     /**
-     *
      * @param contactId
      * @return the flow of contact's PhoneNumbers with the id = contactId
      */
-    public Observable<PhoneNumber> getPhoneNumbers(String contactId) {
+    private Observable<List<PhoneNumber>> getPhoneNumbers(String contactId) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 PhoneNumberEntry.TABLE_NAME,
                 PhoneNumberEntry._CONTACT_ID);
         return databaseHelper.createQuery(PhoneNumberEntry.TABLE_NAME, sql, contactId)
-                .mapToList(phoneNumberMapperFunction).flatMap(Observable::fromIterable);
+                .mapToList(phoneNumberMapperFunction);
+    }
+
+    private QueryObservable getTestPhone(String contactId) {
+        List<PhoneNumber> results = new ArrayList<>();
+        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+                PhoneNumberEntry.TABLE_NAME,
+                PhoneNumberEntry._CONTACT_ID);
+        return databaseHelper.createQuery(PhoneNumberEntry.TABLE_NAME, sql, contactId);
     }
 }

@@ -43,7 +43,7 @@ public class ContactsActivity extends AppCompatActivity {
     private void setUpToolbar(){
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Contacts");
     }
 }

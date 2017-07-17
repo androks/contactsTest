@@ -67,7 +67,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
         setUpRecyclerView();
 
-
         showMessage(DebugDB.getAddressLog());
 
         return rootView;
