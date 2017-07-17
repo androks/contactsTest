@@ -1,8 +1,39 @@
 package com.androks.contactstest.addeditcontact;
 
-/**
- * Created by androks on 17.07.17.
- */
+import com.androks.contactstest.BasePresenter;
+import com.androks.contactstest.BaseView;
+import com.androks.contactstest.data.entity.Email;
+import com.androks.contactstest.data.entity.PhoneNumber;
+
+import java.util.List;
 
 public interface AddEditContactContract {
+
+    interface View extends BaseView<Presenter>{
+
+        void showEmptyContactError();
+
+        void showContactsList();
+
+        void setName(String name);
+
+        void setSurname(String surname);
+
+        void setEmails(List<Email> emails);
+
+        void setPhoneNumbers(List<PhoneNumber> phoneNumbers);
+    }
+
+    interface Presenter extends BasePresenter {
+
+        void saveContact(String name,
+                         String surname,
+                         List<MultiImputedViewsViewHolder> emails,
+                         List<MultiImputedViewsViewHolder> phones
+        );
+
+        void populateTask();
+
+        boolean isDataMissing();
+    }
 }

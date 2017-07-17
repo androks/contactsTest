@@ -14,6 +14,7 @@ import com.androks.contactstest.R;
  */
 public class AddEditContactFragment extends Fragment {
 
+    public static final String ARGUMENT_EDIT_CONTACT_ID = "EDIT_CONTACT_ID";
 
     public AddEditContactFragment() {
         // Required empty public constructor
@@ -27,4 +28,7 @@ public class AddEditContactFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_add_edit_contact, container, false);
     }
 
+    public AddEditContactFragment newInstance() {
+        return new AddEditContactFragment();
+    }
 }

@@ -45,7 +45,7 @@
 
     <Button
         android:id="@+id/btn_sign_up"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="143dp"
