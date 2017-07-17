@@ -151,12 +151,19 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         values.put(ContactEntry._NAME, contact.getName());
         values.put(ContactEntry._SURNAME, contact.getSurname());
         values.put(ContactEntry._CREATED_AT, contact.getCreatedAt());
-        databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
 
-        Observable.fromIterable(contact.getEmails())
-                .subscribe(this::saveEmail);
-        Observable.fromIterable(contact.getPhones())
-                .subscribe(this::savePhoneNumber);
+        BriteDatabase.Transaction transaction = databaseHelper.newTransaction();
+        try {
+            databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+            Observable.fromIterable(contact.getEmails())
+                    .subscribe(this::saveEmail);
+            Observable.fromIterable(contact.getPhones())
+                    .subscribe(this::savePhoneNumber);
+            transaction.markSuccessful();
+        }finally {
+            transaction.end();
+        }
     }
 
     @Override
