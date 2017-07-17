@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -80,6 +81,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
                             List<MultiImputedViewsViewHolder> emailViews,
                             List<MultiImputedViewsViewHolder> phoneViews) {
         Contact contact = Contact.newBuilder()
+                .owner(getCurrentUserEmail())
                 .name(name)
                 .surname(surname)
                 .build();
@@ -121,9 +123,10 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
             return phones;
         for (MultiImputedViewsViewHolder view : phoneViews) {
             phones.add(PhoneNumber.newBuilder()
+                    .id(UUID.randomUUID().toString())
                     .contactId(contactId)
                     .phone(view.data.getText().toString())
-                    .label(view.data.getText().toString())
+                    .label(view.label.getText().toString())
                     .build());
         }
         return phones;
@@ -135,9 +138,10 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
             return emails;
         for (MultiImputedViewsViewHolder view : emailViews) {
             emails.add(Email.newBuilder()
+                    .id(UUID.randomUUID().toString())
                     .contactId(contactId)
                     .email(view.data.getText().toString())
-                    .label(view.data.getText().toString())
+                    .label(view.label.getText().toString())
                     .build());
         }
         return emails;
