@@ -17,6 +17,8 @@ import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
 import com.squareup.sqlbrite2.SqlBrite;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -97,23 +99,24 @@ public class ContactsLocalDataSource implements ContactsDataSource {
     }
 
     @Override
-    public Observable<Contact> getContacts(String ownerEmail) {
+    public Observable<List<Contact>> getContacts(String ownerEmail) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 ContactEntry.TABLE_NAME,
                 ContactEntry._OWNER);
 
         return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, ownerEmail)
-                .mapToList(contactsMapperFunction).flatMap(Observable::fromIterable)
-                .map(contact -> {
-                    getEmails(contact.getId()).map(email -> {
-                        contact.addEmail(email);
-                        return email;
-                    });
-                    getPhoneNumbers(contact.getId()).map(phoneNumber -> {
-                       contact.addPhoneNumber(phoneNumber);
-                        return phoneNumber;
-                    });
-                    return contact;
+                .mapToList(contactsMapperFunction).map(contacts -> {
+                    for(Contact contact: contacts){
+                        getEmails(contact.getId()).map(email -> {
+                            contact.addEmail(email);
+                            return email;
+                        });
+                        getPhoneNumbers(contact.getId()).map(phoneNumber -> {
+                            contact.addPhoneNumber(phoneNumber);
+                            return phoneNumber;
+                        });
+                    }
+                    return contacts;
                 });
     }
 
@@ -139,10 +142,10 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
     @Override
     public void saveContact(@NonNull Contact contact) {
-        for (Email email : contact.getEmails())
-            saveEmail(email);
-        for (PhoneNumber phoneNumber : contact.getPhones())
-            savePhoneNumber(phoneNumber);
+
+        contact.getEmails().forEach(this::saveEmail);
+        contact.getPhones().forEach(this::savePhoneNumber);
+        
         ContentValues values = new ContentValues();
         values.put(ContactEntry._ID, contact.getId());
         values.put(ContactEntry._OWNER, contact.getOwner());

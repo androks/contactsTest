@@ -2,6 +2,8 @@ package com.androks.contactstest.data.source;
 
 import com.androks.contactstest.data.entity.Contact;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
@@ -11,7 +13,7 @@ import io.reactivex.annotations.NonNull;
 
 public interface ContactsDataSource {
 
-    Observable<Contact> getContacts(String ownerEmail);
+    Observable<List<Contact>> getContacts(String ownerEmail);
 
     Observable<Contact> getContact(@NonNull String contactId);
 

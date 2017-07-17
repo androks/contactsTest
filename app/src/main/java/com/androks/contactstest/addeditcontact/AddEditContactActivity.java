@@ -7,6 +7,8 @@ import com.androks.contactstest.R;
 
 public class AddEditContactActivity extends AppCompatActivity {
 
+    public static final int REQUEST_ADD_CONTACT = 54;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.amitshekhar.DebugDB;
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
 import com.androks.contactstest.data.entity.Contact;
@@ -19,7 +22,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -61,9 +63,25 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        contactsRv.setAdapter(contactsAdapter);
+        setUpFab();
+
+        setUpRecyclerView();
+
+
+        showMessage(DebugDB.getAddressLog());
 
         return rootView;
+    }
+
+    private void setUpRecyclerView() {
+        contactsRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        contactsRv.setHasFixedSize(true);
+        contactsRv.setAdapter(contactsAdapter);
+    }
+
+    private void setUpFab() {
+        // Set up floating action button
+        getActivity().findViewById(R.id.fab_add_contact).setOnClickListener(__ -> presenter.addNewContact());
     }
 
     @Override
@@ -105,8 +123,9 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     }
 
     @Override
-    public void showAddNewContactUI() {
-        //TODO: Write activity that add the contact
+    public void showAddNewContact() {
+        startActivityForResult(new Intent(getContext(), AddEditContactActivity.class),
+                AddEditContactActivity.REQUEST_ADD_CONTACT);
     }
 
     @Override
@@ -116,14 +135,12 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
     @Override
     public void showLoadingContactsError() {
-
+        //TODO: write loading contacts error UI implementation
     }
 
-    @OnClick(R.id.fab_add_contact)
     @Override
     public void showContactDetailsUI(String contactId) {
-        Intent intent = new Intent(getContext(), AddEditContactActivity.class);
-
+        //TODO: write show contact UI implementation
     }
 
     private void implementContactItemListener(){
@@ -138,5 +155,9 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
                 presenter.openContactDetails(longClickedContact);
             }
         };
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 }

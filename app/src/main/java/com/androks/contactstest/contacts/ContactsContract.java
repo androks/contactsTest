@@ -20,7 +20,7 @@ public interface ContactsContract {
 
         void showContacts(List<Contact> contacts);
 
-        void showAddNewContactUI();
+        void showAddNewContact();
 
         void showNoContacts();
 

@@ -61,7 +61,7 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     @Override
     public void addNewContact() {
-        view.showAddNewContactUI();
+        view.showAddNewContact();
     }
 
     private void loadContacts(boolean showLoadingUI) {
@@ -72,8 +72,6 @@ public class ContactsPresenter implements ContactsContract.Presenter {
                 .getContacts(FirebaseAuth.getInstance().getCurrentUser().getEmail())
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
-                .toList()
-                .toObservable()
                 .subscribe(
                         //OnNext
                         this::processContacts,
