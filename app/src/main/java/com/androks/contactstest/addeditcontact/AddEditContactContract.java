@@ -13,6 +13,8 @@ public interface AddEditContactContract {
 
         void showEmptyNameError();
 
+        void clearAllErrors();
+
         void showEmptySurnameError();
 
         void showNoEmailError();
@@ -40,8 +42,8 @@ public interface AddEditContactContract {
 
         void saveContact(String name,
                          String surname,
-                         List<EmailPhoneIInputViewGroup> emails,
-                         List<EmailPhoneIInputViewGroup> phones
+                         List<EmailPhoneInputViewGroup> emails,
+                         List<EmailPhoneInputViewGroup> phones
         );
 
         void populateContact();

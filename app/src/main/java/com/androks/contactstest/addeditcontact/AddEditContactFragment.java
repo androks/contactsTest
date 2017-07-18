@@ -48,9 +48,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     private AddEditContactContract.Presenter presenter;
 
-    private List<EmailPhoneIInputViewGroup> emailViews = new ArrayList<>();
+    private List<EmailPhoneInputViewGroup> emailViews = new ArrayList<>();
 
-    private List<EmailPhoneIInputViewGroup> phoneViews = new ArrayList<>();
+    private List<EmailPhoneInputViewGroup> phoneViews = new ArrayList<>();
 
     private Disposable lastEmailInputLayoutDisponsable;
 
@@ -117,6 +117,13 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     @Override
     public void showEmptyNameError() {
         nameInputLayout.setError(getString(R.string.field_required));
+        showSnackBar(getString(R.string.fill_in_message));
+    }
+
+    @Override
+    public void clearAllErrors() {
+        nameInputLayout.setErrorEnabled(false);
+        surnameInputLayout.setErrorEnabled(false);
     }
 
     @Override
@@ -133,6 +140,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     public void showNoPhoneError() {
         showSnackBar(getString(R.string.no_phones_error));
     }
+
+
 
     @Override
     public void showContactsList() {
@@ -157,7 +166,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
-            EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
+            EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(email);
             emailViews.add(vh);
             emailContainerLl.addView(view);
@@ -171,7 +180,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
-            EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
+            EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(phoneNumber);
             phoneViews.add(vh);
             phoneContainerLl.addView(view);
@@ -188,7 +197,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
-        EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
+        EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
         vh.dataInputLayout.setHint(getString(R.string.email_hint));
         if (lastEmailInputLayoutDisponsable != null)
             lastEmailInputLayoutDisponsable.dispose();
@@ -213,7 +222,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
-        EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
+        EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
         vh.dataInputLayout.setHint(getString(R.string.phone_hint));
         if (lastPhoneInputLayoutDisponsable != null)
             lastPhoneInputLayoutDisponsable.dispose();
@@ -232,6 +241,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         phoneViews.add(vh);
         phoneContainerLl.addView(view);
     }
+
 
     @OnClick(R.id.btn_add_email)
     void onAddEmailClick() {

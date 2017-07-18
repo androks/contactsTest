@@ -7,6 +7,8 @@ import com.androks.contactstest.R;
 
 public class ActivityContactDetail extends AppCompatActivity {
 
+    public static final String EXTRA_CONTACT_ID = "CONTACT_ID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

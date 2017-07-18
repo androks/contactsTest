@@ -15,14 +15,14 @@ import butterknife.ButterKnife;
  * Created by androks on 17.07.17.
  */
 
-public class EmailPhoneIInputViewGroup {
+public class EmailPhoneInputViewGroup {
 
     @BindView(R.id.et_data) EditText data;
     @BindView(R.id.et_label) EditText label;
     @BindView(R.id.input_layout_label) TextInputLayout labelInputLayout;
     @BindView(R.id.input_layout_data) TextInputLayout dataInputLayout;
 
-    public EmailPhoneIInputViewGroup(View view){
+    public EmailPhoneInputViewGroup(View view){
         ButterKnife.bind(this, view);
     }
 

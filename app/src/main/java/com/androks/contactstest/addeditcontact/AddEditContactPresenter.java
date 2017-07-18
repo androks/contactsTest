@@ -78,8 +78,8 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Override
     public void saveContact(String name,
                             String surname,
-                            List<EmailPhoneIInputViewGroup> emailViews,
-                            List<EmailPhoneIInputViewGroup> phoneViews) {
+                            List<EmailPhoneInputViewGroup> emailViews,
+                            List<EmailPhoneInputViewGroup> phoneViews) {
         Contact contact = Contact.newBuilder()
                 .owner(getCurrentUserEmail())
                 .name(name)
@@ -93,17 +93,18 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     }
 
     private boolean validateContact(Contact contact) {
+        view.clearAllErrors();
         if (TextUtils.isEmpty(contact.getName())) {
             view.showEmptyNameError();
             return false;
         } else if (TextUtils.isEmpty(contact.getSurname())) {
             view.showEmptySurnameError();
             return false;
-        } else if (contact.getPhones().isEmpty()) {
-            view.showNoPhoneError();
-            return false;
         } else if (contact.getEmails().isEmpty()) {
             view.showNoEmailError();
+            return false;
+        } else if (contact.getPhones().isEmpty()) {
+            view.showNoPhoneError();
             return false;
         } else
             return true;
@@ -117,11 +118,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         view.showContactsList();
     }
 
-    private List<PhoneNumber> convertViewsToPhones(List<EmailPhoneIInputViewGroup> phoneViews) {
+    private List<PhoneNumber> convertViewsToPhones(List<EmailPhoneInputViewGroup> phoneViews) {
         List<PhoneNumber> phones = new ArrayList<>(phoneViews.size());
         if(phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
             return phones;
-        for (EmailPhoneIInputViewGroup view : phoneViews) {
+        for (EmailPhoneInputViewGroup view : phoneViews) {
             phones.add(PhoneNumber.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)
@@ -132,11 +133,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         return phones;
     }
 
-    private List<Email> convertViewsToEmails(List<EmailPhoneIInputViewGroup> emailViews) {
+    private List<Email> convertViewsToEmails(List<EmailPhoneInputViewGroup> emailViews) {
         List<Email> emails = new ArrayList<>(emailViews.size());
         if(emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
             return emails;
-        for (EmailPhoneIInputViewGroup view : emailViews) {
+        for (EmailPhoneInputViewGroup view : emailViews) {
             emails.add(Email.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)
