@@ -9,11 +9,16 @@ import com.androks.contactstest.R;
 import com.androks.contactstest.util.ActivityUtils;
 import com.androks.contactstest.util.ProvideUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class AddEditContactActivity extends AppCompatActivity {
 
     public static final int REQUEST_ADD_CONTACT = 54;
 
     public static final String SHOULD_LOAD_DATA_FROM_REPO_KEY = "SHOULD_LOAD_DATA_FROM_REPO_KEY";
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     private AddEditContactPresenter presenter;
 
@@ -21,7 +26,7 @@ public class AddEditContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_contact);
-
+        ButterKnife.bind(this);
         boolean shouldLoadDataFromRepo = true;
 
         // Prevent the presenter from loading data from the repository if this is a config change.
@@ -53,16 +58,18 @@ public class AddEditContactActivity extends AppCompatActivity {
                 ProvideUtils.provideScheduleProvider()
         );
     }
+
     private void setUpToolbar(boolean newContact) {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        if (newContact) {
-            actionBar.setTitle(R.string.edit_contact);
-        } else {
-            actionBar.setTitle(R.string.add_contact);
-        }
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
+        ActionBar ab = getSupportActionBar();
+        if (ab == null)
+            return;
+        ab.setDisplayHomeAsUpEnabled(true);
+        if (newContact)
+            ab.setTitle(R.string.add_contact);
+        else
+            ab.setTitle(R.string.edit_contact);
     }
 
     @Override
