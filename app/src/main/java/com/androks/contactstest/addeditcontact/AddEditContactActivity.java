@@ -59,14 +59,14 @@ public class AddEditContactActivity extends AppCompatActivity {
         );
     }
 
-    private void setUpToolbar(boolean newContact) {
+    private void setUpToolbar(boolean editContact) {
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view -> onBackPressed());
         ActionBar ab = getSupportActionBar();
         if (ab == null)
             return;
         ab.setDisplayHomeAsUpEnabled(true);
-        if (newContact)
+        if (!editContact)
             ab.setTitle(R.string.add_contact);
         else
             ab.setTitle(R.string.edit_contact);

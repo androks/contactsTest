@@ -116,7 +116,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void showEmptyNameError() {
-        nameInputLayout.setError(getActivity().getString(R.string.field_required));
+        nameInputLayout.setError(getString(R.string.field_required));
     }
 
     @Override
@@ -244,6 +244,6 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     }
 
     private void showSnackBar(String message) {
-        Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG).show();
     }
 }
