@@ -4,11 +4,13 @@ package com.androks.contactstest.addeditcontact;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -66,6 +68,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         View rootView = inflater.inflate(R.layout.fragment_add_edit_contact, container, false);
         ButterKnife.bind(this, rootView);
 
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -82,17 +85,25 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getActivity().findViewById(R.id.fab_confirm_contact)
-                .setOnClickListener(__ -> {
-                    presenter.saveContact(
-                            nameEt.getText().toString(),
-                            surnameEt.getText().toString(),
-                            emailViews,
-                            phoneViews);
-                });
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.apply:
+                presenter.saveContact(
+                        nameEt.getText().toString(),
+                        surnameEt.getText().toString(),
+                        emailViews,
+                        phoneViews);
+                break;
+        }
+        return true;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.apply_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     public AddEditContactFragment newInstance() {
         return new AddEditContactFragment();
@@ -188,8 +199,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                     if (isTextEmpty) {
                         vh.labelInputLayout.setVisibility(View.GONE);
                         addEmailBtn.setEnabled(false);
-                    }
-                    else {
+                    } else {
                         vh.labelInputLayout.setVisibility(View.VISIBLE);
                         addEmailBtn.setEnabled(true);
                     }

@@ -12,4 +12,5 @@
     <string name="unknown_error">Some error occured</string>
     <string name="action_bar_welcome">Welcome to the Contacts</string>
     <string name="welcome_intro">Welcome to the Contacts app. Please, click the button below to login</string>
+    <string name="apply">Apply</string>
 </resources>
