@@ -10,4 +10,6 @@
     <string name="no_emails_error">Please, fill in at least one email</string>
     <string name="no_phones_error">Please, fill in at least one phone</string>
     <string name="unknown_error">Some error occured</string>
+    <string name="action_bar_welcome">Welcome to the Contacts</string>
+    <string name="welcome_intro">Welcome to the Contacts app. Please, click the button below to login</string>
 </resources>

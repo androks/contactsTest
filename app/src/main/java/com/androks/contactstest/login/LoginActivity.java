@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setUpToolbar(){
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Contacts");
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setTitle(getString(R.string.action_bar_welcome));
     }
 }

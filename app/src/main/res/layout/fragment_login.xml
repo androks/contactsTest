@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Welcome to the Contact text app. Please, click the button below and login"
+        android:text="@string/welcome_intro"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@android:color/darker_gray"
@@ -41,7 +41,8 @@
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"/>
+        tools:layout_constraintTop_creator="1"
+        app:layout_constraintHorizontal_bias="0.0"/>
 
     <Button
         android:id="@+id/btn_sign_up"
