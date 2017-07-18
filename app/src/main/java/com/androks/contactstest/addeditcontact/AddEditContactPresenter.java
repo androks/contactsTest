@@ -78,8 +78,8 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Override
     public void saveContact(String name,
                             String surname,
-                            List<MultiImputedViewsViewHolder> emailViews,
-                            List<MultiImputedViewsViewHolder> phoneViews) {
+                            List<EmailPhoneIInputViewGroup> emailViews,
+                            List<EmailPhoneIInputViewGroup> phoneViews) {
         Contact contact = Contact.newBuilder()
                 .owner(getCurrentUserEmail())
                 .name(name)
@@ -117,11 +117,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         view.showContactsList();
     }
 
-    private List<PhoneNumber> convertViewsToPhones(List<MultiImputedViewsViewHolder> phoneViews) {
+    private List<PhoneNumber> convertViewsToPhones(List<EmailPhoneIInputViewGroup> phoneViews) {
         List<PhoneNumber> phones = new ArrayList<>(phoneViews.size());
         if(phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
             return phones;
-        for (MultiImputedViewsViewHolder view : phoneViews) {
+        for (EmailPhoneIInputViewGroup view : phoneViews) {
             phones.add(PhoneNumber.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)
@@ -132,11 +132,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         return phones;
     }
 
-    private List<Email> convertViewsToEmails(List<MultiImputedViewsViewHolder> emailViews) {
+    private List<Email> convertViewsToEmails(List<EmailPhoneIInputViewGroup> emailViews) {
         List<Email> emails = new ArrayList<>(emailViews.size());
         if(emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
             return emails;
-        for (MultiImputedViewsViewHolder view : emailViews) {
+        for (EmailPhoneIInputViewGroup view : emailViews) {
             emails.add(Email.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)

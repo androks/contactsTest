@@ -21,7 +21,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,9 +46,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     private AddEditContactContract.Presenter presenter;
 
-    private List<MultiImputedViewsViewHolder> emailViews = new ArrayList<>();
+    private List<EmailPhoneIInputViewGroup> emailViews = new ArrayList<>();
 
-    private List<MultiImputedViewsViewHolder> phoneViews = new ArrayList<>();
+    private List<EmailPhoneIInputViewGroup> phoneViews = new ArrayList<>();
 
     private Disposable lastEmailInputLayoutDisponsable;
 
@@ -146,10 +145,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         for (Email email : emails) {
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.item_email_phone_input, emailContainerLl, false);
-            MultiImputedViewsViewHolder vh = new MultiImputedViewsViewHolder(view);
+            View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
+            EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
             vh.populate(email);
-            vh.dataInputLayout.setHint(getString(R.string.email_hint));
             emailViews.add(vh);
             emailContainerLl.addView(view);
         }
@@ -161,10 +159,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         for (PhoneNumber phoneNumber : phoneNumbers) {
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.item_email_phone_input, phoneContainerLl, false);
-            MultiImputedViewsViewHolder vh = new MultiImputedViewsViewHolder(view);
+            View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
+            EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
             vh.populate(phoneNumber);
-            vh.dataInputLayout.setHint(getString(R.string.phone_hint));
             phoneViews.add(vh);
             phoneContainerLl.addView(view);
         }
@@ -179,13 +176,12 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     public void showNewEmailInputLayout() {
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_email_phone_input, emailContainerLl, false);
-        MultiImputedViewsViewHolder vh = new MultiImputedViewsViewHolder(view);
+        View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
+        EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
         vh.dataInputLayout.setHint(getString(R.string.email_hint));
         if (lastEmailInputLayoutDisponsable != null)
             lastEmailInputLayoutDisponsable.dispose();
         lastEmailInputLayoutDisponsable = RxTextView.textChangeEvents(vh.data)
-                .sample(TimeUnit.SECONDS.toSeconds(1), TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().isEmpty())
                 .subscribe(isTextEmpty -> {
@@ -206,13 +202,12 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     public void showNewPhoneInputLayout() {
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_email_phone_input, phoneContainerLl, false);
-        MultiImputedViewsViewHolder vh = new MultiImputedViewsViewHolder(view);
+        View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
+        EmailPhoneIInputViewGroup vh = new EmailPhoneIInputViewGroup(view);
         vh.dataInputLayout.setHint(getString(R.string.phone_hint));
         if (lastPhoneInputLayoutDisponsable != null)
             lastPhoneInputLayoutDisponsable.dispose();
         lastPhoneInputLayoutDisponsable = RxTextView.textChangeEvents(vh.data)
-                .sample(TimeUnit.SECONDS.toSeconds(1), TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().isEmpty())
                 .subscribe(isTextEmpty -> {

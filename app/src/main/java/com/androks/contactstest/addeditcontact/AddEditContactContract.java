@@ -40,8 +40,8 @@ public interface AddEditContactContract {
 
         void saveContact(String name,
                          String surname,
-                         List<MultiImputedViewsViewHolder> emails,
-                         List<MultiImputedViewsViewHolder> phones
+                         List<EmailPhoneIInputViewGroup> emails,
+                         List<EmailPhoneIInputViewGroup> phones
         );
 
         void populateContact();
