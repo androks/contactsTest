@@ -14,4 +14,7 @@
     <string name="welcome_intro">Welcome to the Contacts app. Please, click the button below to login</string>
     <string name="apply">Apply</string>
     <string name="fill_in_message">Please, fill in the form</string>
+    <string name="remove">Remove</string>
+    <string name="edit">Edit</string>
+    <string name="choose_email_client">Choose email client</string>
 </resources>

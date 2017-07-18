@@ -128,19 +128,19 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         String sql = String.format("SELECT * FROM %s WHERE contact.id LIKE ?",
                 ContactEntry.TABLE_NAME,
                 ContactEntry._ID);
-        return databaseHelper.createQuery(ContactEntry.TABLE_NAME, sql, contactId)
-                .mapToOneOrDefault(contactsMapperFunction, null)
-                .map(contact -> {
-                    getEmails(contact.getId()).map(emails -> {
-                        contact.addEmails(emails);
-                        return emails;
-                    });
-                    getPhoneNumbers(contact.getId()).map(phoneNumbers -> {
-                        contact.addPhoneNumbers(phoneNumbers);
-                        return phoneNumbers;
-                    });
+        Observable<Contact> contactObj = databaseHelper
+                .createQuery(ContactEntry.TABLE_NAME, sql, contactId)
+                .mapToOne(contactsMapperFunction);
+        return Observable.zip(
+                contactObj,
+                contactObj.flatMap(contact -> getPhoneNumbers(contact.getId())),
+                contactObj.flatMap(contact -> getEmails(contact.getId())),
+                (contact, phoneNumbers, emails) -> {
+                    contact.addPhoneNumbers(phoneNumbers);
+                    contact.addEmails(emails);
                     return contact;
-                });
+                }
+        );
     }
 
     @Override
@@ -154,6 +154,9 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
         BriteDatabase.Transaction transaction = databaseHelper.newTransaction();
         try {
+            deleteAllContactsEmails(contact.getId());
+            deleteAllContactsPhones(contact.getId());
+
             databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
 
             Observable.fromIterable(contact.getEmails())
@@ -161,7 +164,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
             Observable.fromIterable(contact.getPhones())
                     .subscribe(this::savePhoneNumber);
             transaction.markSuccessful();
-        }finally {
+        } finally {
             transaction.end();
         }
     }
@@ -190,14 +193,6 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         databaseHelper.insert(EmailEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    private void deleteEmail(@NonNull Email email) {
-        deleteEmail(email.getId());
-    }
-
-    private void deleteEmail(@NonNull String emailId) {
-        databaseHelper.delete(EmailEntry.TABLE_NAME, EmailEntry._ID + " LIKE ?", emailId);
-    }
-
     private void savePhoneNumber(@NonNull PhoneNumber phoneNumber) {
         ContentValues values = new ContentValues();
         values.put(PhoneNumberEntry._ID, phoneNumber.getId());
@@ -207,13 +202,14 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         databaseHelper.insert(PhoneNumberEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    private void deletePhoneNumber(@NonNull PhoneNumber phoneNumber) {
-        deletePhoneNumber(phoneNumber.getId());
+    private void deleteAllContactsEmails(@NonNull String contactId) {
+        databaseHelper.delete(EmailEntry.TABLE_NAME, EmailEntry._CONTACT_ID
+                + " LIKE ?", contactId);
     }
 
-    private void deletePhoneNumber(@NonNull String phoneNumberId) {
-        databaseHelper.delete(PhoneNumberEntry.TABLE_NAME, PhoneNumberEntry._ID
-                + " LIKE ?", phoneNumberId);
+    private void deleteAllContactsPhones(@NonNull String contactId) {
+        databaseHelper.delete(PhoneNumberEntry.TABLE_NAME, PhoneNumberEntry._CONTACT_ID
+                + " LIKE ?", contactId);
     }
 
     /**

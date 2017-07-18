@@ -15,9 +15,7 @@ public interface ContactDetailContract {
 
     interface View extends BaseView<Presenter>{
 
-        void showName(String name);
-
-        void showSurname(String surname);
+        void showFullName(String name, String surname);
 
         void showPhones(List<PhoneNumber> phoneNumbers);
 

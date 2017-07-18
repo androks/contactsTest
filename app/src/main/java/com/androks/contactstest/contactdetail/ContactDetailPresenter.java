@@ -86,8 +86,7 @@ public class ContactDetailPresenter implements ContactDetailContract.Presenter {
     }
 
     private void showContact(@NonNull Contact contact){
-        view.showName(contact.getName());
-        view.showSurname(contact.getSurname());
+        view.showFullName(contact.getName(), contact.getSurname());
         view.showEmails(contact.getEmails());
         view.showPhones(contact.getPhones());
     }

@@ -58,9 +58,9 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     @Override
     public void subscribe() {
-        if (!isNewTask() && isDataMissing)
+        if (!isNewContact() && isDataMissing)
             populateContact();
-        else{
+        else {
             initNewContact();
         }
     }
@@ -80,13 +80,37 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
                             String surname,
                             List<EmailPhoneInputViewGroup> emailViews,
                             List<EmailPhoneInputViewGroup> phoneViews) {
+        if (isNewContact())
+            createContact(name, surname, emailViews, phoneViews);
+        else
+            updateContact(name, surname, emailViews, phoneViews);
+    }
+
+    private void updateContact(String name,
+                               String surname,
+                               List<EmailPhoneInputViewGroup> emailViews,
+                               List<EmailPhoneInputViewGroup> phoneViews) {
+        Contact contact = Contact.newBuilder()
+                .id(contactId)
+                .owner(getCurrentUserEmail())
+                .name(name)
+                .surname(surname)
+                .build();
+        contact.addEmails(convertViewsToEmails(emailViews));
+        contact.addPhoneNumbers(convertViewsToPhones(phoneViews));
+        saveContact(contact);
+    }
+
+    private void createContact(String name,
+                               String surname,
+                               List<EmailPhoneInputViewGroup> emailViews,
+                               List<EmailPhoneInputViewGroup> phoneViews) {
         Contact contact = Contact.newBuilder()
                 .owner(getCurrentUserEmail())
                 .name(name)
                 .surname(surname)
                 .build();
-        if(isNewTask())
-            contactId = contact.getId();
+        contactId = contact.getId();
         contact.addEmails(convertViewsToEmails(emailViews));
         contact.addPhoneNumbers(convertViewsToPhones(phoneViews));
         saveContact(contact);
@@ -120,7 +144,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<PhoneNumber> convertViewsToPhones(List<EmailPhoneInputViewGroup> phoneViews) {
         List<PhoneNumber> phones = new ArrayList<>(phoneViews.size());
-        if(phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
+        if (phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
             return phones;
         for (EmailPhoneInputViewGroup view : phoneViews) {
             phones.add(PhoneNumber.newBuilder()
@@ -135,7 +159,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<Email> convertViewsToEmails(List<EmailPhoneInputViewGroup> emailViews) {
         List<Email> emails = new ArrayList<>(emailViews.size());
-        if(emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
+        if (emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
             return emails;
         for (EmailPhoneInputViewGroup view : emailViews) {
             emails.add(Email.newBuilder()
@@ -183,7 +207,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         view.showNewPhoneInputLayout();
     }
 
-    private boolean isNewTask() {
+    private boolean isNewContact() {
         return contactId == null;
     }
 

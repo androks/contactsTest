@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.amitshekhar.DebugDB;
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
+import com.androks.contactstest.contactdetail.ActivityContactDetail;
 import com.androks.contactstest.data.entity.Contact;
 
 import java.util.ArrayList;
@@ -144,7 +145,9 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
     @Override
     public void showContactDetailsUI(String contactId) {
-        //TODO: write show contact UI implementation
+        Intent intent = new Intent(getContext(), ActivityContactDetail.class);
+        intent.putExtra(ActivityContactDetail.EXTRA_CONTACT_ID, contactId);
+        startActivity(intent);
     }
 
     private void implementContactItemListener() {
