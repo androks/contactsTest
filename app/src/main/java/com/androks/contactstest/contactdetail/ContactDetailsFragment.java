@@ -2,6 +2,7 @@ package com.androks.contactstest.contactdetail;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,23 @@ import java.util.List;
  */
 public class ContactDetailsFragment extends Fragment implements ContactDetailContract.View {
 
+    @NonNull
+    private static final String ARGUMENT_CONTACT_ID = "ARGUMENT_CONTACT_ID";
+
+    @NonNull
+    private static final int REQUEST_EDIT_CONTACT = 188;
 
     public ContactDetailsFragment() {
         // Required empty public constructor
     }
 
+    public static ContactDetailsFragment newInstance(String contactId){
+        Bundle bundle = new Bundle();
+        bundle.putString(ARGUMENT_CONTACT_ID, contactId);
+        ContactDetailsFragment fragment = new ContactDetailsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
