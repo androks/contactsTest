@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -33,11 +33,9 @@ import butterknife.Unbinder;
  */
 public class ContactDetailsFragment extends Fragment implements ContactDetailContract.View {
 
-    @NonNull
-    private static final String ARGUMENT_CONTACT_ID = "ARGUMENT_CONTACT_ID";
+    public static final String ARGUMENT_CONTACT_ID = "ARGUMENT_CONTACT_ID";
 
-    @NonNull
-    private static final int REQUEST_EDIT_CONTACT = 188;
+    public static final int REQUEST_EDIT_CONTACT = 188;
 
     @BindView(R.id.ll_phone_container) LinearLayout phoneContainerLl;
     @BindView(R.id.ll_email_container) LinearLayout emailContainerLl;
@@ -134,7 +132,14 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
 
     @Override
     public void showContactDeleted() {
+        getActivity().setResult(ContactDetailActivity.RESULT_DELETED);
         getActivity().finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        presenter.onActivityResult(requestCode, resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -149,6 +154,11 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phone));
         startActivity(callIntent);
+    }
+
+    @Override
+    public void showUserSavedMessage() {
+        showSnackBar(getString(R.string.user_saved));
     }
 
     @Override
@@ -168,5 +178,9 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.contact_details_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void showSnackBar(String message) {
+        Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG).show();
     }
 }

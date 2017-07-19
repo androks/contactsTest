@@ -41,4 +41,7 @@
     <string name="sort_way_default">NAME</string>
     <string name="log_out">Log out</string>
     <string name="pref_sort_type_title">Sorting</string>
+    <string name="user_saved">User saved successfully</string>
+    <string name="contact_deleted">Contact deleted successfully</string>
+    <string name="contact_added">Contact added succesfully</string>
 </resources>

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -123,7 +124,7 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Write something if it will be needed
+        presenter.onActivityResult(requestCode, resultCode);
     }
 
     @Override
@@ -161,12 +162,22 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     public void showContactDetailsUI(String contactId) {
         Intent intent = new Intent(getContext(), ContactDetailActivity.class);
         intent.putExtra(ContactDetailActivity.EXTRA_CONTACT_ID, contactId);
-        startActivity(intent);
+        startActivityForResult(intent, ContactDetailActivity.REQUEST_DELETE_CONTACT);
     }
 
     @Override
     public void showSettingUi() {
         startActivity(new Intent(getContext(), SettingsActivity.class));
+    }
+
+    @Override
+    public void showContactDeletedMessage() {
+        showSnackBar(getString(R.string.contact_deleted));
+    }
+
+    @Override
+    public void showContactAddedMessage() {
+        showSnackBar(getString(R.string.contact_added));
     }
 
     @Override
@@ -228,5 +239,9 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSnackBar(String message) {
+        Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG).show();
     }
 }

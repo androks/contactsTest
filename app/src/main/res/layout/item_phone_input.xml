@@ -32,6 +32,7 @@
             <EditText
                 android:id="@+id/et_data"
                 android:inputType="phone"
+                android:hint="@string/phone_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"/>

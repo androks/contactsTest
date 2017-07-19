@@ -1,7 +1,10 @@
 package com.androks.contactstest.contacts;
 
+import android.app.Activity;
 import android.text.TextUtils;
 
+import com.androks.contactstest.addeditcontact.AddEditContactActivity;
+import com.androks.contactstest.contactdetail.ContactDetailActivity;
 import com.androks.contactstest.data.entity.Contact;
 import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.data.source.ContactsRepository;
@@ -62,8 +65,13 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     }
 
     @Override
-    public void result(int requestCode, int resultCode) {
-
+    public void onActivityResult(int requestCode, int resultCode) {
+        if(requestCode == AddEditContactActivity.REQUEST_ADD_CONTACT &&
+                resultCode == Activity.RESULT_OK)
+            view.showContactAddedMessage();
+        if(requestCode == ContactDetailActivity.REQUEST_DELETE_CONTACT &&
+                resultCode == ContactDetailActivity.RESULT_DELETED)
+            view.showContactDeletedMessage();
     }
 
     @Override

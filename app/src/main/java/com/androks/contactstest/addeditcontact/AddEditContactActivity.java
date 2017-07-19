@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 
 public class AddEditContactActivity extends AppCompatActivity {
 
-    public static final int REQUEST_ADD_CONTACT = 54;
+    public static final int REQUEST_ADD_CONTACT = 5544;
 
     public static final String SHOULD_LOAD_DATA_FROM_REPO_KEY = "SHOULD_LOAD_DATA_FROM_REPO_KEY";
 
@@ -72,7 +72,7 @@ public class AddEditContactActivity extends AppCompatActivity {
         if (ab == null)
             return;
         ab.setDisplayHomeAsUpEnabled(true);
-        if (!TextUtils.isEmpty(editContactId))
+        if (TextUtils.isEmpty(editContactId))
             ab.setTitle(R.string.add_contact);
         else
             ab.setTitle(R.string.edit_contact);

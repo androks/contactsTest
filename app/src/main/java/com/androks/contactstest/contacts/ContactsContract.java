@@ -30,13 +30,17 @@ public interface ContactsContract {
 
         void showSettingUi();
 
+        void showContactDeletedMessage();
+
+        void showContactAddedMessage();
+
         ContactSortType getContactSortType();
     }
 
 
     interface Presenter extends BasePresenter {
 
-        void result(int requestCode, int resultCode);
+        void onActivityResult(int requestCode, int resultCode);
 
         void loadContacts();
 

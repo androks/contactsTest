@@ -29,6 +29,8 @@ public interface ContactDetailContract {
 
         void showCallUi(String phone);
 
+        void showUserSavedMessage();
+
     }
 
     interface Presenter extends BasePresenter {
@@ -40,5 +42,7 @@ public interface ContactDetailContract {
         void call(String phoneNumber);
 
         void sendMail(String email);
+
+        void onActivityResult(int requestCode, int resultCode);
     }
 }

@@ -49,8 +49,10 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     private AddEditContactContract.Presenter presenter;
 
+    //Store emailViews entered by user or created from existing email(in edit mode case)
     private List<EmailPhoneInputViewGroup> emailViews = new ArrayList<>();
 
+    //Store phoneViews entered by user or created from existing phone(in edit mode case)
     private List<EmailPhoneInputViewGroup> phoneViews = new ArrayList<>();
 
     private Disposable lastEmailInputLayoutDisponsable;
@@ -169,30 +171,39 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void setEmails(List<Email> emails) {
+        //Activity loaded in edited mode, so we must populate emails
         emailViews.clear();
         emailContainerLl.removeAllViews();
         for (Email email : emails) {
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
+            //Binding and populating our view
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(email);
+
             emailViews.add(vh);
+            //Add view to view group
             emailContainerLl.addView(view);
         }
     }
 
     @Override
     public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+        //Activity loaded in edited mode, so we must populate emails
         phoneViews.clear();
         phoneContainerLl.removeAllViews();
+
         for (PhoneNumber phoneNumber : phoneNumbers) {
             LayoutInflater inflater =
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
+            //Binding and populating our view
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(phoneNumber);
+
             phoneViews.add(vh);
+            //Add view to view group
             phoneContainerLl.addView(view);
         }
     }
@@ -207,14 +218,20 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
+        //Bind view
         EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
-        vh.dataInputLayout.setHint(getString(R.string.email_hint));
+
+        //Remove listener from last email input field if it is not null
         if (lastEmailInputLayoutDisponsable != null)
             lastEmailInputLayoutDisponsable.dispose();
+
+        //Add new listener to last email field
         lastEmailInputLayoutDisponsable = RxTextView.textChangeEvents(vh.data)
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().isEmpty())
+                //Check if text field is empty
+                .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().trim().isEmpty())
                 .subscribe(isTextEmpty -> {
+                    //Hide or show label field and add more btn
                     if (isTextEmpty) {
                         vh.labelInputLayout.setVisibility(View.GONE);
                         addEmailBtn.setEnabled(false);
@@ -223,7 +240,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                         addEmailBtn.setEnabled(true);
                     }
                 });
+
         emailViews.add(vh);
+
         emailContainerLl.addView(view);
     }
 
@@ -232,14 +251,20 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
+        //Bind view
         EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
-        vh.dataInputLayout.setHint(getString(R.string.phone_hint));
+
+        //Remove listener from last phone input field if it is not null
         if (lastPhoneInputLayoutDisponsable != null)
             lastPhoneInputLayoutDisponsable.dispose();
+
+        //Add new listener to last phone field
         lastPhoneInputLayoutDisponsable = RxTextView.textChangeEvents(vh.data)
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().isEmpty())
+                //Check if text field is empty
+                .map(textViewTextChangeEvent -> textViewTextChangeEvent.text().toString().trim().isEmpty())
                 .subscribe(isTextEmpty -> {
+                    //Hide or show label field and add more btn
                     if (isTextEmpty) {
                         vh.labelInputLayout.setVisibility(View.GONE);
                         addPhoneBtn.setEnabled(false);
@@ -249,6 +274,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                     }
                 });
         phoneViews.add(vh);
+
         phoneContainerLl.addView(view);
     }
 

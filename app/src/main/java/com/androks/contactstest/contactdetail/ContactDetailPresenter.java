@@ -1,5 +1,6 @@
 package com.androks.contactstest.contactdetail;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -63,6 +64,13 @@ public class ContactDetailPresenter implements ContactDetailContract.Presenter {
     @Override
     public void sendMail(String email) {
         view.showSendMailUi(email);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode) {
+        if(requestCode == ContactDetailsFragment.REQUEST_EDIT_CONTACT &&
+                resultCode == Activity.RESULT_OK)
+            view.showUserSavedMessage();
     }
 
     @Override

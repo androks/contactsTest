@@ -16,6 +16,10 @@ public class ContactDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_CONTACT_ID = "CONTACT_ID";
 
+    public static final int REQUEST_DELETE_CONTACT = 32;
+
+    public static final int RESULT_DELETED = 24;
+
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
