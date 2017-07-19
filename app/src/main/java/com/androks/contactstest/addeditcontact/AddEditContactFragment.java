@@ -169,6 +169,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void setEmails(List<Email> emails) {
+        emailViews.clear();
         emailContainerLl.removeAllViews();
         for (Email email : emails) {
             LayoutInflater inflater =
@@ -183,6 +184,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+        phoneViews.clear();
         phoneContainerLl.removeAllViews();
         for (PhoneNumber phoneNumber : phoneNumbers) {
             LayoutInflater inflater =
