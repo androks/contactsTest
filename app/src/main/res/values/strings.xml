@@ -44,4 +44,6 @@
     <string name="user_saved">User saved successfully</string>
     <string name="contact_deleted">Contact deleted successfully</string>
     <string name="contact_added">Contact added succesfully</string>
+    <string name="failed_to_call">Cannot make a call</string>
+    <string name="created_at">Created</string>
 </resources>

@@ -97,5 +97,6 @@ public class ContactDetailPresenter implements ContactDetailContract.Presenter {
         view.showFullName(contact.getName(), contact.getSurname());
         view.showEmails(contact.getEmails());
         view.showPhones(contact.getPhones());
+        view.showCreatedAt(contact.getCreatedAt());
     }
 }

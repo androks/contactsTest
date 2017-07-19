@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
@@ -37,6 +39,7 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
 
     public static final int REQUEST_EDIT_CONTACT = 188;
 
+    @BindView(R.id.tv_created_at) TextView createdAtTV;
     @BindView(R.id.ll_phone_container) LinearLayout phoneContainerLl;
     @BindView(R.id.ll_email_container) LinearLayout emailContainerLl;
 
@@ -105,6 +108,7 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_email_phone, phoneContainerLl, false);
             EmailPhoneInputView vh = new EmailPhoneInputView(view);
+            vh.item.setOnClickListener(__ -> presenter.call(phoneNumber.getPhone()));
             vh.populate(phoneNumber);
             phoneContainerLl.addView(view);
         }
@@ -118,6 +122,7 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
                     (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.item_email_phone, emailContainerLl, false);
             EmailPhoneInputView vh = new EmailPhoneInputView(view);
+            vh.item.setOnClickListener(__ -> presenter.sendMail(email.getEmail()));
             vh.populate(email);
             emailContainerLl.addView(view);
         }
@@ -144,16 +149,27 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
 
     @Override
     public void showSendMailUi(String email) {
-        Intent gmail = new Intent(Intent.ACTION_VIEW);
-        gmail.putExtra(Intent.ACTION_SENDTO, Uri.parse("mailto:" + email));
-        startActivity(Intent.createChooser(gmail, getString(R.string.choose_email_client)));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, email);
+        intent.setType("text/html");
+        startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
     @Override
     public void showCallUi(String phone) {
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + phone));
-        startActivity(callIntent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException e) {
+            Toast.makeText(getActivity().getApplicationContext(),
+                    R.string.failed_to_call, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void showCreatedAt(String createdAt) {
+        createdAtTV.setText(
+                new StringBuilder(getString(R.string.created_at)).append(" ").append(createdAt));
     }
 
     @Override

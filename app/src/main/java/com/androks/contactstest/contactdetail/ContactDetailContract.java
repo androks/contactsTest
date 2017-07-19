@@ -29,6 +29,8 @@ public interface ContactDetailContract {
 
         void showCallUi(String phone);
 
+        void showCreatedAt(String createdAt);
+
         void showUserSavedMessage();
 
     }

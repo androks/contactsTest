@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 
 public class EmailPhoneInputView {
 
+    @BindView(R.id.item) View item;
     @BindView(R.id.tv_data) TextView data;
     @BindView(R.id.tv_label) TextView label;
 
