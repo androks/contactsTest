@@ -12,7 +12,7 @@ import com.androks.contactstest.util.ProvideUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ActivityContactDetail extends AppCompatActivity {
+public class ContactDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_CONTACT_ID = "CONTACT_ID";
 

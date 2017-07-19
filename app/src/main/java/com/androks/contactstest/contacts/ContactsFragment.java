@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -20,8 +21,10 @@ import android.widget.Toast;
 import com.amitshekhar.DebugDB;
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
-import com.androks.contactstest.contactdetail.ActivityContactDetail;
+import com.androks.contactstest.contactdetail.ContactDetailActivity;
 import com.androks.contactstest.data.entity.Contact;
+import com.androks.contactstest.login.LoginActivity;
+import com.androks.contactstest.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,9 +158,21 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
     @Override
     public void showContactDetailsUI(String contactId) {
-        Intent intent = new Intent(getContext(), ActivityContactDetail.class);
-        intent.putExtra(ActivityContactDetail.EXTRA_CONTACT_ID, contactId);
+        Intent intent = new Intent(getContext(), ContactDetailActivity.class);
+        intent.putExtra(ContactDetailActivity.EXTRA_CONTACT_ID, contactId);
         startActivity(intent);
+    }
+
+    @Override
+    public void showLoginUi() {
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showSettingUi() {
+        startActivity(new Intent(getContext(), SettingsActivity.class));
     }
 
     private void implementContactItemListener() {
@@ -197,4 +212,17 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.log_out:
+                presenter.logOut();
+                break;
+
+            case R.id.settings:
+                presenter.changeSetting();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -1,7 +1,5 @@
 package com.androks.contactstest.contacts;
 
-import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,8 +37,6 @@ public class ContactsActivity extends AppCompatActivity {
                 contactsFragment,
                 ProvideUtils.provideScheduleProvider()
         );
-
-        handleIntent(getIntent());
     }
 
 
@@ -49,17 +45,5 @@ public class ContactsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle("Contacts");
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            return;
-        }
     }
 }

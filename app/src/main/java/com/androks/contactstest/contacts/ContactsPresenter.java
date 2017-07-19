@@ -146,4 +146,15 @@ public class ContactsPresenter implements ContactsContract.Presenter {
         queryPartOfName = null;
         loadContacts();
     }
+
+    @Override
+    public void logOut() {
+        FirebaseAuth.getInstance().signOut();
+        view.showLoginUi();
+    }
+
+    @Override
+    public void changeSetting() {
+        view.showSettingUi();
+    }
 }

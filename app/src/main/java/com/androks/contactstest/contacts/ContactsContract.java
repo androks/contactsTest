@@ -27,6 +27,10 @@ public interface ContactsContract {
         void showLoadingContactsError();
 
         void showContactDetailsUI(String contactId);
+
+        void showLoginUi();
+
+        void showSettingUi();
     }
 
 
@@ -43,5 +47,9 @@ public interface ContactsContract {
         void applyFilterByName(String partOfName);
 
         void clearFilter();
+
+        void logOut();
+
+        void changeSetting();
     }
 }
