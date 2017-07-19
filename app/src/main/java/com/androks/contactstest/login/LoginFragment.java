@@ -58,6 +58,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, rootView);
 
+        setRetainInstance(true);
         return rootView;
     }
 

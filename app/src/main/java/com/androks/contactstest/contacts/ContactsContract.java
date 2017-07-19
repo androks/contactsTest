@@ -27,6 +27,8 @@ public interface ContactsContract {
         void showLoadingContactsError();
 
         void showContactDetailsUI(String contactId);
+
+        void onBackPressed();
     }
 
 
@@ -39,5 +41,9 @@ public interface ContactsContract {
         void addNewContact();
 
         void openContactDetails(@NonNull Contact requestedTask);
+
+        void applyFilterByName(String partOfName);
+
+        void clearFilter();
     }
 }

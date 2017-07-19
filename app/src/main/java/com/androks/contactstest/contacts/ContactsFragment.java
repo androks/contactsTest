@@ -1,13 +1,18 @@
 package com.androks.contactstest.contacts;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -20,6 +25,7 @@ import com.androks.contactstest.data.entity.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +45,8 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     private ContactsRecyclerViewAdapter contactsAdapter;
 
     private ContactItemListener contactItemListener;
+
+    private SearchView searchView;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -68,6 +76,8 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
         showMessage(DebugDB.getAddressLog());
 
+        setRetainInstance(true);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -150,6 +160,11 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        // if(searchView.is)
+    }
+
     private void implementContactItemListener() {
         contactItemListener = new ContactItemListener() {
             @Override
@@ -167,4 +182,24 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     private void showMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.contacts_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
+        com.jakewharton.rxbinding2.support.v7.widget.RxSearchView.queryTextChanges(searchView)
+                .debounce(600, TimeUnit.MILLISECONDS)
+                .map(CharSequence::toString)
+                .subscribe(text -> presenter.applyFilterByName(text));
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 }

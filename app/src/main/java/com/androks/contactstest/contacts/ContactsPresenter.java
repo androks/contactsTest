@@ -1,13 +1,19 @@
 package com.androks.contactstest.contacts;
 
+import android.text.TextUtils;
+
 import com.androks.contactstest.data.entity.Contact;
+import com.androks.contactstest.data.entity.Email;
+import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.data.source.ContactsRepository;
 import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -27,6 +33,9 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     @NonNull
     private CompositeDisposable subscriptions;
+
+    @Nullable
+    private String queryPartOfName;
 
     public ContactsPresenter(ContactsRepository contactsRepository,
                              ContactsContract.View view,
@@ -70,6 +79,13 @@ public class ContactsPresenter implements ContactsContract.Presenter {
         subscriptions.clear();
         contactsRepository
                 .getContacts(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+                .flatMap(list -> {
+                    Observable<Contact> contacts = Observable.fromIterable(list);
+                    if(TextUtils.isEmpty(queryPartOfName))
+                        return contacts.toList().toObservable();
+                    return Observable.fromIterable(list)
+                            .filter(this::filterContact).toList().toObservable();
+                })
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
                 .subscribe(
@@ -84,6 +100,25 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     }
 
+    private boolean filterContact(Contact contact){
+        if(contact.getName().toLowerCase().contains(queryPartOfName))
+            return true;
+        if(contact.getSurname().toLowerCase().contains(queryPartOfName))
+            return true;
+        if((contact.getName().toLowerCase() + " " + contact.getSurname().toLowerCase())
+                .contains(queryPartOfName))
+            return true;
+        for(PhoneNumber phone: contact.getPhones()){
+            if(phone.getPhone().contains(queryPartOfName))
+                return true;
+        }
+        for(Email email: contact.getEmails()){
+            if(email.getEmail().toLowerCase().contains(queryPartOfName))
+                return true;
+        }
+        return false;
+    }
+
     private void processContacts(@NonNull List<Contact> contacts) {
         if (contacts.isEmpty())
             view.showNoContacts();
@@ -96,5 +131,21 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Override
     public void openContactDetails(@NonNull Contact requestedTask) {
         view.showContactDetailsUI(requestedTask.getId());
+    }
+
+    @Override
+    public void applyFilterByName(String partOfName) {
+        queryPartOfName = partOfName.trim().toLowerCase();
+        loadContacts();
+    }
+
+    @Override
+    public void clearFilter() {
+        queryPartOfName = null;
+        loadContacts();
+    }
+
+    public void onBackPressed() {
+        view.onBackPressed();
     }
 }

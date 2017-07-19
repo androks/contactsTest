@@ -65,7 +65,7 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
         View rootView = inflater.inflate(R.layout.fragment_contact_details, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         setHasOptionsMenu(true);
-
+        setRetainInstance(true);
 
         return rootView;
     }
@@ -96,7 +96,7 @@ public class ContactDetailsFragment extends Fragment implements ContactDetailCon
     @Override
     public void showFullName(String name, String surname){
         ((AppCompatActivity)getActivity()).getSupportActionBar()
-                .setTitle(new StringBuilder(name).append(surname));
+                .setTitle(new StringBuilder(name).append(" ").append(surname));
     }
 
     @Override

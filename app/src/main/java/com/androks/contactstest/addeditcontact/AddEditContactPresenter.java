@@ -144,9 +144,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<PhoneNumber> convertViewsToPhones(List<EmailPhoneInputViewGroup> phoneViews) {
         List<PhoneNumber> phones = new ArrayList<>(phoneViews.size());
-        if (phoneViews.isEmpty() || phoneViews.get(0).data.getText().toString().isEmpty())
+        if (phoneViews.isEmpty())
             return phones;
         for (EmailPhoneInputViewGroup view : phoneViews) {
+            if(view.data.getText().toString().isEmpty())
+                continue;
             phones.add(PhoneNumber.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)
@@ -159,9 +161,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private List<Email> convertViewsToEmails(List<EmailPhoneInputViewGroup> emailViews) {
         List<Email> emails = new ArrayList<>(emailViews.size());
-        if (emailViews.isEmpty() || emailViews.get(0).data.getText().toString().isEmpty())
+        if (emailViews.isEmpty())
             return emails;
         for (EmailPhoneInputViewGroup view : emailViews) {
+            if(view.data.getText().toString().isEmpty())
+                continue;
             emails.add(Email.newBuilder()
                     .id(UUID.randomUUID().toString())
                     .contactId(contactId)

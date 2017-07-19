@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 
 public class EmailPhoneInputViewGroup {
 
+    @BindView(R.id.container) View rootView;
     @BindView(R.id.et_data) EditText data;
     @BindView(R.id.et_label) EditText label;
     @BindView(R.id.input_layout_label) TextInputLayout labelInputLayout;

@@ -27,6 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
@@ -56,6 +57,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     private Disposable lastPhoneInputLayoutDisponsable;
 
+    private Unbinder unbinder;
+
     public AddEditContactFragment() {
         // Required empty public constructor
     }
@@ -66,9 +69,10 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add_edit_contact, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         setHasOptionsMenu(true);
+        setRetainInstance(true);
         return rootView;
     }
 
@@ -82,6 +86,12 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     public void onPause() {
         super.onPause();
         presenter.unsubscribe();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -140,8 +150,6 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     public void showNoPhoneError() {
         showSnackBar(getString(R.string.no_phones_error));
     }
-
-
 
     @Override
     public void showContactsList() {
@@ -241,7 +249,6 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         phoneViews.add(vh);
         phoneContainerLl.addView(view);
     }
-
 
     @OnClick(R.id.btn_add_email)
     void onAddEmailClick() {

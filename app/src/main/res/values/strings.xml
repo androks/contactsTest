@@ -17,4 +17,7 @@
     <string name="remove">Remove</string>
     <string name="edit">Edit</string>
     <string name="choose_email_client">Choose email client</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search</string>
+    <string name="settings">Settings</string>
 </resources>
