@@ -7,7 +7,7 @@
             android:dialogTitle="@string/pref_syncConnectionType"
             android:entries="@array/sort_ways_entries"
             android:entryValues="@array/sort_ways_entry_values"
-            android:key="pref_syncConnectionType"
+            android:key="pref_contact_sort_type"
             android:title="@string/way_of_sort_title"/>
     </PreferenceCategory>
 </PreferenceScreen>

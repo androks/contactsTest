@@ -19,7 +19,7 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Contacts.db";
 
     private static final String TEXT_TYPE = " TEXT";
-
+    private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_CONTACTS_TABLE =
@@ -33,7 +33,7 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_EMAILS_TABLE =
             "CREATE TABLE " + EmailEntry.TABLE_NAME + " (" +
-                    EmailEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    EmailEntry._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT," +
                     EmailEntry._CONTACT_ID + TEXT_TYPE + " NOT NULL," +
                     EmailEntry._EMAIL + TEXT_TYPE + COMMA_SEP +
                     EmailEntry._LABEL + TEXT_TYPE + COMMA_SEP +
@@ -44,7 +44,7 @@ public class ContactsDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_PHONE_NUMBERS_TABLE =
             "CREATE TABLE " + PhoneNumberEntry.TABLE_NAME + " (" +
-                    PhoneNumberEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    PhoneNumberEntry._ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT," +
                     PhoneNumberEntry._CONTACT_ID + TEXT_TYPE + " NOT NULL," +
                     PhoneNumberEntry._PHONE + TEXT_TYPE + COMMA_SEP +
                     PhoneNumberEntry._LABEL + TEXT_TYPE + COMMA_SEP +

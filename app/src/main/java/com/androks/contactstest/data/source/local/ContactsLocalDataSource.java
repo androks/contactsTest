@@ -186,7 +186,8 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
     private void saveEmail(@NonNull Email email) {
         ContentValues values = new ContentValues();
-        values.put(EmailEntry._ID, email.getId());
+        if(email.getId() != null)
+            values.put(EmailEntry._ID, email.getId());
         values.put(EmailEntry._CONTACT_ID, email.getContactId());
         values.put(EmailEntry._EMAIL, email.getEmail());
         values.put(EmailEntry._LABEL, email.getLabel());
@@ -195,7 +196,8 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
     private void savePhoneNumber(@NonNull PhoneNumber phoneNumber) {
         ContentValues values = new ContentValues();
-        values.put(PhoneNumberEntry._ID, phoneNumber.getId());
+        if(phoneNumber.getId() != null)
+            values.put(PhoneNumberEntry._ID, phoneNumber.getId());
         values.put(PhoneNumberEntry._CONTACT_ID, phoneNumber.getContactId());
         values.put(PhoneNumberEntry._PHONE, phoneNumber.getPhone());
         values.put(PhoneNumberEntry._LABEL, phoneNumber.getLabel());

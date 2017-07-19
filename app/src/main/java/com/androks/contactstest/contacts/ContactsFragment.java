@@ -4,7 +4,9 @@ package com.androks.contactstest.contacts;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +25,6 @@ import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
 import com.androks.contactstest.contactdetail.ContactDetailActivity;
 import com.androks.contactstest.data.entity.Contact;
-import com.androks.contactstest.login.LoginActivity;
 import com.androks.contactstest.settings.SettingsActivity;
 
 import java.util.ArrayList;
@@ -164,15 +165,21 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     }
 
     @Override
-    public void showLoginUi() {
-        Intent intent = new Intent(getContext(), LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+    public void showSettingUi() {
+        startActivity(new Intent(getContext(), SettingsActivity.class));
     }
 
     @Override
-    public void showSettingUi() {
-        startActivity(new Intent(getContext(), SettingsActivity.class));
+    public ContactSortType getContactSortType() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String syncConnPref = sharedPref.getString(
+                SettingsActivity.KEY_PREF_CONTACTS_SORT_TYPE,
+                ContactSortType.NAME.toString());
+        try{
+            return ContactSortType.valueOf(syncConnPref);
+        }catch (IllegalArgumentException e){
+            return ContactSortType.NAME;
+        }
     }
 
     private void implementContactItemListener() {
@@ -204,6 +211,7 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setQueryHint("Put name or phone number");
         com.jakewharton.rxbinding2.support.v7.widget.RxSearchView.queryTextChanges(searchView)
                 .debounce(600, TimeUnit.MILLISECONDS)
                 .map(CharSequence::toString)
@@ -215,10 +223,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.log_out:
-                presenter.logOut();
-                break;
-
             case R.id.settings:
                 presenter.changeSetting();
                 break;

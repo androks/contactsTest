@@ -57,9 +57,6 @@ public class ContactsRecyclerViewAdapter
                 .append(" ")
                 .append(contact.getSurname())
         );
-        holder.additionalInfo.setText(contact.getPhones().isEmpty() ?
-                contact.getCreatedAt() : contact.getPhones().get(0).getPhone()
-        );
     }
 
     @Override
@@ -71,7 +68,6 @@ public class ContactsRecyclerViewAdapter
 
         @BindView(R.id.item) View item;
         @BindView(R.id.tv_name) TextView name;
-        @BindView(R.id.tv_additional_info) TextView additionalInfo;
 
         public ViewHolder(View itemView) {
             super(itemView);

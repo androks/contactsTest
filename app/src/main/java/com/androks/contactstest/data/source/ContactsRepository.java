@@ -23,7 +23,6 @@ public class ContactsRepository implements ContactsDataSource {
 
     private ContactsRepository(@NonNull ContactsDataSource contactsLocalDataSource) {
         this.contactLocalDataSource = contactsLocalDataSource;
-
     }
 
     /**

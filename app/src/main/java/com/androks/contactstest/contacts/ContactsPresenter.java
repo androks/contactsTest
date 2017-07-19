@@ -3,7 +3,6 @@ package com.androks.contactstest.contacts;
 import android.text.TextUtils;
 
 import com.androks.contactstest.data.entity.Contact;
-import com.androks.contactstest.data.entity.Email;
 import com.androks.contactstest.data.entity.PhoneNumber;
 import com.androks.contactstest.data.source.ContactsRepository;
 import com.androks.contactstest.util.schedulers.BaseSchedulerProvider;
@@ -37,6 +36,9 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Nullable
     private String queryPartOfName;
 
+    @NonNull
+    private ContactSortType sortType;
+
     public ContactsPresenter(ContactsRepository contactsRepository,
                              ContactsContract.View view,
                              BaseSchedulerProvider provider) {
@@ -51,6 +53,7 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Override
     public void subscribe() {
         loadContacts();
+        sortType = view.getContactSortType();
     }
 
     @Override
@@ -80,11 +83,18 @@ public class ContactsPresenter implements ContactsContract.Presenter {
         contactsRepository
                 .getContacts(FirebaseAuth.getInstance().getCurrentUser().getEmail())
                 .flatMap(list -> {
-                    Observable<Contact> contacts = Observable.fromIterable(list);
-                    if(TextUtils.isEmpty(queryPartOfName))
-                        return contacts.toList().toObservable();
-                    return Observable.fromIterable(list)
-                            .filter(this::filterContact).toList().toObservable();
+                    Observable<Contact> filteredSortedList = Observable.fromIterable(list)
+                            .filter(this::filterContact);
+                    switch (sortType) {
+                        case NAME:
+                            return filteredSortedList.toSortedList(Contact::compareName).toObservable();
+                        case NEWER_FIRST:
+                            return filteredSortedList.toSortedList(Contact::compareNewer).toObservable();
+                        case OLDER_FIRST:
+                            return filteredSortedList.toSortedList(Contact::compareOlder).toObservable();
+                        default:
+                            return filteredSortedList.toSortedList(Contact::compareName).toObservable();
+                    }
                 })
                 .subscribeOn(schedulerProvider.computation())
                 .observeOn(schedulerProvider.ui())
@@ -100,20 +110,18 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     }
 
-    private boolean filterContact(Contact contact){
-        if(contact.getName().toLowerCase().contains(queryPartOfName))
+    private boolean filterContact(Contact contact) {
+        if (TextUtils.isEmpty(queryPartOfName))
             return true;
-        if(contact.getSurname().toLowerCase().contains(queryPartOfName))
+        if (contact.getName().toLowerCase().contains(queryPartOfName))
             return true;
-        if((contact.getName().toLowerCase() + " " + contact.getSurname().toLowerCase())
+        if (contact.getSurname().toLowerCase().contains(queryPartOfName))
+            return true;
+        if ((contact.getName().toLowerCase() + " " + contact.getSurname().toLowerCase())
                 .contains(queryPartOfName))
             return true;
-        for(PhoneNumber phone: contact.getPhones()){
-            if(phone.getPhone().contains(queryPartOfName))
-                return true;
-        }
-        for(Email email: contact.getEmails()){
-            if(email.getEmail().toLowerCase().contains(queryPartOfName))
+        for (PhoneNumber phone : contact.getPhones()) {
+            if (phone.getPhone().contains(queryPartOfName))
                 return true;
         }
         return false;
@@ -127,7 +135,6 @@ public class ContactsPresenter implements ContactsContract.Presenter {
 
     }
 
-
     @Override
     public void openContactDetails(@NonNull Contact requestedTask) {
         view.showContactDetailsUI(requestedTask.getId());
@@ -136,7 +143,7 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Override
     public void applyFilterByName(String partOfName) {
         queryPartOfName = partOfName.trim().toLowerCase();
-        if(TextUtils.isEmpty(queryPartOfName))
+        if (TextUtils.isEmpty(queryPartOfName))
             clearFilter();
         loadContacts();
     }
@@ -145,12 +152,6 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     public void clearFilter() {
         queryPartOfName = null;
         loadContacts();
-    }
-
-    @Override
-    public void logOut() {
-        FirebaseAuth.getInstance().signOut();
-        view.showLoginUi();
     }
 
     @Override

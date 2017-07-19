@@ -17,6 +17,8 @@ import butterknife.OnClick;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    public static final String KEY_PREF_CONTACTS_SORT_TYPE = "pref_contact_sort_type";
+
     @BindView(R.id.btn_log_out) Button logOutBtn;
     @BindView(R.id.toolbar) Toolbar toolbar;
 

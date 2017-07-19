@@ -28,9 +28,9 @@ public interface ContactsContract {
 
         void showContactDetailsUI(String contactId);
 
-        void showLoginUi();
-
         void showSettingUi();
+
+        ContactSortType getContactSortType();
     }
 
 
@@ -47,8 +47,6 @@ public interface ContactsContract {
         void applyFilterByName(String partOfName);
 
         void clearFilter();
-
-        void logOut();
 
         void changeSetting();
     }

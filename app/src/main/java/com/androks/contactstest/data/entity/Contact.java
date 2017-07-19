@@ -45,11 +45,11 @@ public final class Contact {
         return new Builder();
     }
 
-    public void addEmails(List<Email> email){
+    public void addEmails(List<Email> email) {
         emails = new ArrayList<>(email);
     }
 
-    public void addPhoneNumbers(List<PhoneNumber> phoneNumber){
+    public void addPhoneNumbers(List<PhoneNumber> phoneNumber) {
         phones = new ArrayList<>(phoneNumber);
     }
 
@@ -93,19 +93,20 @@ public final class Contact {
         return createdAt;
     }
 
-    public void setCreatedAt(String date){
-        if(TextUtils.isEmpty(date))
+    public void setCreatedAt(String date) {
+        if (TextUtils.isEmpty(date))
             createdAt = DateTimeUtils.dateToString(new Date());
         else
             createdAt = date;
     }
 
-    public void setId(String id){
-        if(TextUtils.isEmpty(id))
+    public void setId(String id) {
+        if (TextUtils.isEmpty(id))
             this.id = UUID.randomUUID().toString();
         else
             this.id = id;
     }
+
     @Override
     public int hashCode() {
         int result = id.hashCode();
@@ -114,6 +115,28 @@ public final class Contact {
         return result;
     }
 
+    public static Integer compareName(Contact o1, Contact o2) {
+        return (o1.getName() + o1.getSurname()).compareTo(o2.getName() + o2.getSurname());
+    }
+
+    public static Integer compareNewer(Contact o1, Contact o2) {
+        Date d1 = DateTimeUtils.stringToDate(o1.getCreatedAt());
+        Date d2 = DateTimeUtils.stringToDate(o2.getCreatedAt());
+        if (d1 != null && d2 != null)
+            return d2.compareTo(d1);
+        else
+            return (o2.getCreatedAt()).compareTo(o1.getCreatedAt());
+
+    }
+
+    public static Integer compareOlder(Contact o1, Contact o2) {
+        Date d1 = DateTimeUtils.stringToDate(o1.getCreatedAt());
+        Date d2 = DateTimeUtils.stringToDate(o2.getCreatedAt());
+        if (d1 != null && d2 != null)
+            return d1.compareTo(d2);
+        else
+            return (o1.getCreatedAt()).compareTo(o2.getCreatedAt());
+    }
 
     public static final class Builder {
         private String id;
@@ -152,23 +175,23 @@ public final class Contact {
             return this;
         }
 
-        public Builder addPhone(PhoneNumber phoneNumber){
+        public Builder addPhone(PhoneNumber phoneNumber) {
             phones.add(phoneNumber);
             return this;
         }
 
-        public Builder addEmail(Email email){
+        public Builder addEmail(Email email) {
             emails.add(email);
             return this;
         }
 
 
-        public Builder addPhones(List<PhoneNumber> phoneNumber){
+        public Builder addPhones(List<PhoneNumber> phoneNumber) {
             phones.addAll(phoneNumber);
             return this;
         }
 
-        public Builder addEmails(List<Email> email){
+        public Builder addEmails(List<Email> email) {
             emails.addAll(email);
             return this;
         }

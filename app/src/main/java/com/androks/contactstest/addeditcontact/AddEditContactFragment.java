@@ -99,8 +99,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         switch (item.getItemId()) {
             case R.id.apply:
                 presenter.saveContact(
-                        nameEt.getText().toString(),
-                        surnameEt.getText().toString(),
+                        nameEt.getText().toString().trim(),
+                        surnameEt.getText().toString().trim(),
                         emailViews,
                         phoneViews);
                 break;

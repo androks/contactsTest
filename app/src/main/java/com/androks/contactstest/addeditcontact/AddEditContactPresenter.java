@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -147,13 +146,12 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         if (phoneViews.isEmpty())
             return phones;
         for (EmailPhoneInputViewGroup view : phoneViews) {
-            if(view.data.getText().toString().isEmpty())
+            if(view.data.getText().toString().trim().isEmpty())
                 continue;
             phones.add(PhoneNumber.newBuilder()
-                    .id(UUID.randomUUID().toString())
                     .contactId(contactId)
-                    .phone(view.data.getText().toString())
-                    .label(view.label.getText().toString())
+                    .phone(view.data.getText().toString().trim())
+                    .label(view.label.getText().toString().trim())
                     .build());
         }
         return phones;
@@ -164,13 +162,12 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         if (emailViews.isEmpty())
             return emails;
         for (EmailPhoneInputViewGroup view : emailViews) {
-            if(view.data.getText().toString().isEmpty())
+            if(view.data.getText().toString().trim().isEmpty())
                 continue;
             emails.add(Email.newBuilder()
-                    .id(UUID.randomUUID().toString())
                     .contactId(contactId)
-                    .email(view.data.getText().toString())
-                    .label(view.label.getText().toString())
+                    .email(view.data.getText().toString().trim())
+                    .label(view.label.getText().toString().trim())
                     .build());
         }
         return emails;
