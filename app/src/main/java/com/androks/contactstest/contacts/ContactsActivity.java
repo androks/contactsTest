@@ -62,10 +62,4 @@ public class ContactsActivity extends AppCompatActivity {
             return;
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        presenter.onBackPressed();
-    }
 }

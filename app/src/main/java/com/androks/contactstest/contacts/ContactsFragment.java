@@ -160,11 +160,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        // if(searchView.is)
-    }
-
     private void implementContactItemListener() {
         contactItemListener = new ContactItemListener() {
             @Override

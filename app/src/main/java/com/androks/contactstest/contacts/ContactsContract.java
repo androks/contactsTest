@@ -27,8 +27,6 @@ public interface ContactsContract {
         void showLoadingContactsError();
 
         void showContactDetailsUI(String contactId);
-
-        void onBackPressed();
     }
 
 

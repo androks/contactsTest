@@ -136,6 +136,8 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Override
     public void applyFilterByName(String partOfName) {
         queryPartOfName = partOfName.trim().toLowerCase();
+        if(TextUtils.isEmpty(queryPartOfName))
+            clearFilter();
         loadContacts();
     }
 
@@ -143,9 +145,5 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     public void clearFilter() {
         queryPartOfName = null;
         loadContacts();
-    }
-
-    public void onBackPressed() {
-        view.onBackPressed();
     }
 }
