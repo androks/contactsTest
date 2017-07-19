@@ -21,8 +21,26 @@ import butterknife.ButterKnife;
 public class ContactsRecyclerViewAdapter
         extends RecyclerView.Adapter<ContactsRecyclerViewAdapter.ViewHolder> {
 
+    private View emptyView;
     private List<Contact> contacts;
     private ContactItemListener itemListener;
+
+    final private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            checkIfEmpty();
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            checkIfEmpty();
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            checkIfEmpty();
+        }
+    };
 
     public ContactsRecyclerViewAdapter(List<Contact> contacts, ContactItemListener itemListener) {
         this.contacts = contacts;
@@ -32,6 +50,7 @@ public class ContactsRecyclerViewAdapter
     public void replaceData(List<Contact> contacts) {
         this.contacts = contacts;
         notifyDataSetChanged();
+        checkIfEmpty();
     }
 
     @Override
@@ -62,6 +81,17 @@ public class ContactsRecyclerViewAdapter
     @Override
     public int getItemCount() {
         return contacts.size();
+    }
+
+    private void checkIfEmpty() {
+        if (emptyView != null) {
+            emptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void setEmptyView(View emptyView) {
+        this.emptyView = emptyView;
+        checkIfEmpty();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

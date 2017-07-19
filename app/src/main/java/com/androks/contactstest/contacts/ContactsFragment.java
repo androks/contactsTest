@@ -19,9 +19,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amitshekhar.DebugDB;
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
 import com.androks.contactstest.contactdetail.ContactDetailActivity;
@@ -42,6 +42,7 @@ import butterknife.Unbinder;
 public class ContactsFragment extends Fragment implements ContactsContract.View {
 
     @BindView(R.id.rv_contacts) RecyclerView contactsRv;
+    @BindView(R.id.tv_no_items) TextView noItemsTv;
 
     private Unbinder unbinder;
 
@@ -79,8 +80,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
         setUpRecyclerView();
 
-        showMessage(DebugDB.getAddressLog());
-
         setRetainInstance(true);
         setHasOptionsMenu(true);
         return rootView;
@@ -97,6 +96,7 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
         contactsRv.setLayoutManager(new LinearLayoutManager(getContext()));
         contactsRv.setHasFixedSize(true);
         contactsRv.setAdapter(contactsAdapter);
+        contactsAdapter.setEmptyView(noItemsTv);
     }
 
     private void setUpFab() {

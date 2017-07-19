@@ -46,4 +46,5 @@
     <string name="contact_added">Contact added succesfully</string>
     <string name="failed_to_call">Cannot make a call</string>
     <string name="created_at">Created</string>
+    <string name="no_items_msg">Nothing to show</string>
 </resources>
