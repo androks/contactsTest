@@ -8,6 +8,8 @@ import com.androks.contactstest.R;
 import com.androks.contactstest.data.entity.Email;
 import com.androks.contactstest.data.entity.PhoneNumber;
 
+import java.util.UUID;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -17,7 +19,7 @@ import butterknife.ButterKnife;
 
 public class EmailPhoneInputViewGroup {
 
-    @BindView(R.id.container) View rootView;
+    public View rootView;
     @BindView(R.id.et_data) EditText data;
     @BindView(R.id.et_label) EditText label;
     @BindView(R.id.input_layout_label) TextInputLayout labelInputLayout;
@@ -25,6 +27,8 @@ public class EmailPhoneInputViewGroup {
 
     public EmailPhoneInputViewGroup(View view){
         ButterKnife.bind(this, view);
+        rootView = view;
+        rootView.setId(UUID.randomUUID().variant());
     }
 
     public void populate(Email email){
