@@ -8,8 +8,6 @@ import com.androks.contactstest.R;
 import com.androks.contactstest.data.entity.Email;
 import com.androks.contactstest.data.entity.PhoneNumber;
 
-import java.util.UUID;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,16 +26,33 @@ public class EmailPhoneInputViewGroup {
     public EmailPhoneInputViewGroup(View view){
         ButterKnife.bind(this, view);
         rootView = view;
-        rootView.setId(UUID.randomUUID().variant());
+        rootView.setId(View.generateViewId());
+        data.setId(View.generateViewId());
+        label.setId(View.generateViewId());
+        labelInputLayout.setId(View.generateViewId());
+        dataInputLayout.setId(View.generateViewId());
     }
 
     public void populate(Email email){
         data.setText(email.getEmail());
         label.setText(email.getLabel());
+
     }
 
     public void populate(PhoneNumber phone){
         data.setText(phone.getPhone());
         label.setText(phone.getLabel());
+    }
+
+    public Email toEmail(){
+        return Email.newBuilder()
+                .label(label.getText().toString())
+                .email(data.getText().toString()).build();
+    }
+
+    public PhoneNumber toPhone(){
+        return PhoneNumber.newBuilder()
+                .label(label.getText().toString())
+                .phone(data.getText().toString()).build();
     }
 }

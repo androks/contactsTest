@@ -17,7 +17,7 @@ public class AddEditContactActivity extends AppCompatActivity {
 
     public static final int REQUEST_ADD_CONTACT = 5544;
 
-    public static final String SHOULD_LOAD_DATA_FROM_REPO_KEY = "SHOULD_LOAD_DATA_FROM_REPO_KEY";
+    public static final String IS_CONFIG_CHANGED = "IS_CONFIG_CHANGED";
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -25,7 +25,7 @@ public class AddEditContactActivity extends AppCompatActivity {
 
     private  AddEditContactFragment addEditContactFragment;
 
-    private boolean shouldLoadDataFromRepo = true;
+    private boolean onConfigChanged = false;
 
     private String editContactId;
 
@@ -52,7 +52,7 @@ public class AddEditContactActivity extends AppCompatActivity {
         // Prevent the presenter from loading data from the repository if this is a config change.
         if (savedInstanceState != null) {
             // Data might not have loaded when the config change happen, so we saved the state.
-            shouldLoadDataFromRepo = savedInstanceState.getBoolean(SHOULD_LOAD_DATA_FROM_REPO_KEY);
+            onConfigChanged = savedInstanceState.getBoolean(IS_CONFIG_CHANGED);
         }
 
         //Create the presenter
@@ -60,7 +60,7 @@ public class AddEditContactActivity extends AppCompatActivity {
                 editContactId,
                 ProvideUtils.provideContactsRepository(getApplicationContext()),
                 addEditContactFragment,
-                shouldLoadDataFromRepo,
+                onConfigChanged,
                 ProvideUtils.provideScheduleProvider()
         );
     }
@@ -81,7 +81,7 @@ public class AddEditContactActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // Save the state so that next time we know if we need to refresh data.
-        outState.putBoolean(SHOULD_LOAD_DATA_FROM_REPO_KEY, presenter.isDataMissing());
+        outState.putBoolean(IS_CONFIG_CHANGED, true);
         super.onSaveInstanceState(outState);
     }
 }

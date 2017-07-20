@@ -34,7 +34,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Nullable
     private String contactId;
 
-    private boolean isDataMissing;
+    private boolean isConfigChanged;
 
     @NonNull
     private CompositeDisposable subscriptions;
@@ -42,13 +42,13 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     public AddEditContactPresenter(@Nullable String contactId,
                                    @NonNull ContactsDataSource contactsRepository,
                                    @NonNull AddEditContactContract.View view,
-                                   boolean shouldLoadDataFromSource,
+                                   boolean isConfigChanged,
                                    @NonNull BaseSchedulerProvider schedulerProvider) {
         this.contactId = contactId;
         this.contactsRepository = contactsRepository;
         this.view = view;
         this.schedulerProvider = schedulerProvider;
-        isDataMissing = shouldLoadDataFromSource;
+        this.isConfigChanged = isConfigChanged;
 
         subscriptions = new CompositeDisposable();
 
@@ -57,7 +57,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     @Override
     public void subscribe() {
-        if (!isNewContact() && isDataMissing)
+        if (!isNewContact())
             populateContact();
         else {
             initNewContact();
@@ -146,7 +146,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         if (phoneViews.isEmpty())
             return phones;
         for (EmailPhoneInputViewGroup view : phoneViews) {
-            if(view.data.getText().toString().trim().isEmpty())
+            if (view.data.getText().toString().trim().isEmpty())
                 continue;
             phones.add(PhoneNumber.newBuilder()
                     .contactId(contactId)
@@ -162,7 +162,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
         if (emailViews.isEmpty())
             return emails;
         for (EmailPhoneInputViewGroup view : emailViews) {
-            if(view.data.getText().toString().trim().isEmpty())
+            if (view.data.getText().toString().trim().isEmpty())
                 continue;
             emails.add(Email.newBuilder()
                     .contactId(contactId)
@@ -184,8 +184,10 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
                         contact -> {
                             view.setName(contact.getName());
                             view.setSurname(contact.getSurname());
-                            view.setEmails(contact.getEmails());
-                            view.setPhoneNumbers(contact.getPhones());
+                            if (!isConfigChanged) {
+                                view.setEmails(contact.getEmails());
+                                view.setPhoneNumbers(contact.getPhones());
+                            }
                         },
                         //OnError
                         __ -> {
@@ -194,8 +196,8 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     }
 
     @Override
-    public boolean isDataMissing() {
-        return isDataMissing;
+    public boolean isConfigChanged() {
+        return isConfigChanged;
     }
 
     @Override

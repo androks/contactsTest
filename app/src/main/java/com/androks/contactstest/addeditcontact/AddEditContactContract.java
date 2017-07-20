@@ -48,7 +48,7 @@ public interface AddEditContactContract {
 
         void populateContact();
 
-        boolean isDataMissing();
+        boolean isConfigChanged();
 
         void addNewEmailInputLayout();
 

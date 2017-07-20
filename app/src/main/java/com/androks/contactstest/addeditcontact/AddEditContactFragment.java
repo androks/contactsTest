@@ -75,7 +75,20 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
+        onRestoreView();
         return rootView;
+    }
+
+    private void onRestoreView() {
+        List<Email> emails = new ArrayList<>();
+        for (EmailPhoneInputViewGroup email : emailViews)
+            emails.add(email.toEmail());
+        setEmails(emails);
+        List<PhoneNumber> phones = new ArrayList<>();
+        for (EmailPhoneInputViewGroup phone : phoneViews)
+            phones.add(phone.toPhone());
+        setPhoneNumbers(phones);
     }
 
     @Override
@@ -93,6 +106,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        emailContainerLl.removeAllViews();
+        phoneContainerLl.removeAllViews();
         unbinder.unbind();
     }
 
@@ -182,6 +197,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(email);
 
+            setDisponsableToTheLastEmailFiels(vh);
+
             emailViews.add(vh);
             //Add view to view group
             emailContainerLl.addView(view);
@@ -202,7 +219,10 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(phoneNumber);
 
+            setDisponsableToTheLastPhoneFiels(vh);
+
             phoneViews.add(vh);
+
             //Add view to view group
             phoneContainerLl.addView(view);
         }
@@ -215,12 +235,49 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void showNewEmailInputLayout() {
+        if (!presenter.isConfigChanged() && emailViews.size() > 0)
+            return;
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.item_email_input, emailContainerLl, false);
         //Bind view
         EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
 
+        setDisponsableToTheLastEmailFiels(vh);
+
+        emailViews.add(vh);
+
+        emailContainerLl.addView(view);
+    }
+
+    @Override
+    public void showNewPhoneInputLayout() {
+        if (!presenter.isConfigChanged() && phoneViews.size() > 0)
+            return;
+        LayoutInflater inflater =
+                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
+        //Bind view
+        EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
+
+        setDisponsableToTheLastPhoneFiels(vh);
+
+        phoneViews.add(vh);
+
+        phoneContainerLl.addView(view);
+    }
+
+    @OnClick(R.id.btn_add_email)
+    void onAddEmailClick() {
+        presenter.addNewEmailInputLayout();
+    }
+
+    @OnClick(R.id.btn_add_phone)
+    void onAddPhoneClick() {
+        presenter.addNewPhoneInputLayout();
+    }
+
+    private void setDisponsableToTheLastEmailFiels(EmailPhoneInputViewGroup vh) {
         //Remove listener from last email input field if it is not null
         if (lastEmailInputLayoutDisponsable != null)
             lastEmailInputLayoutDisponsable.dispose();
@@ -240,20 +297,9 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                         addEmailBtn.setEnabled(true);
                     }
                 });
-
-        emailViews.add(vh);
-
-        emailContainerLl.addView(view);
     }
 
-    @Override
-    public void showNewPhoneInputLayout() {
-        LayoutInflater inflater =
-                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.item_phone_input, phoneContainerLl, false);
-        //Bind view
-        EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
-
+    private void setDisponsableToTheLastPhoneFiels(EmailPhoneInputViewGroup vh) {
         //Remove listener from last phone input field if it is not null
         if (lastPhoneInputLayoutDisponsable != null)
             lastPhoneInputLayoutDisponsable.dispose();
@@ -273,20 +319,8 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                         addPhoneBtn.setEnabled(true);
                     }
                 });
-        phoneViews.add(vh);
-
-        phoneContainerLl.addView(view);
     }
 
-    @OnClick(R.id.btn_add_email)
-    void onAddEmailClick() {
-        presenter.addNewEmailInputLayout();
-    }
-
-    @OnClick(R.id.btn_add_phone)
-    void onAddPhoneClick() {
-        presenter.addNewPhoneInputLayout();
-    }
 
     private void showSnackBar(String message) {
         Snackbar.make(getActivity().findViewById(R.id.content), message, Snackbar.LENGTH_LONG).show();
