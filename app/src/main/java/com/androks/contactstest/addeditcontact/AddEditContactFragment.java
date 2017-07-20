@@ -197,7 +197,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(email);
 
-            setDisponsableToTheLastEmailFiels(vh);
+            setDisponsableToTheLastEmailField(vh);
 
             emailViews.add(vh);
             //Add view to view group
@@ -219,7 +219,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
             EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
             vh.populate(phoneNumber);
 
-            setDisponsableToTheLastPhoneFiels(vh);
+            setDisponsableToTheLastPhoneField(vh);
 
             phoneViews.add(vh);
 
@@ -235,7 +235,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void showNewEmailInputLayout() {
-        if (!presenter.isConfigChanged() && emailViews.size() > 0)
+        if (presenter.isConfigChanged() && emailViews.size() > 0)
             return;
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -243,7 +243,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         //Bind view
         EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
 
-        setDisponsableToTheLastEmailFiels(vh);
+        setDisponsableToTheLastEmailField(vh);
 
         emailViews.add(vh);
 
@@ -252,7 +252,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
 
     @Override
     public void showNewPhoneInputLayout() {
-        if (!presenter.isConfigChanged() && phoneViews.size() > 0)
+        if (presenter.isConfigChanged() && phoneViews.size() > 0)
             return;
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -260,7 +260,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         //Bind view
         EmailPhoneInputViewGroup vh = new EmailPhoneInputViewGroup(view);
 
-        setDisponsableToTheLastPhoneFiels(vh);
+        setDisponsableToTheLastPhoneField(vh);
 
         phoneViews.add(vh);
 
@@ -277,7 +277,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
         presenter.addNewPhoneInputLayout();
     }
 
-    private void setDisponsableToTheLastEmailFiels(EmailPhoneInputViewGroup vh) {
+    private void setDisponsableToTheLastEmailField(EmailPhoneInputViewGroup vh) {
         //Remove listener from last email input field if it is not null
         if (lastEmailInputLayoutDisponsable != null)
             lastEmailInputLayoutDisponsable.dispose();
@@ -299,7 +299,7 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
                 });
     }
 
-    private void setDisponsableToTheLastPhoneFiels(EmailPhoneInputViewGroup vh) {
+    private void setDisponsableToTheLastPhoneField(EmailPhoneInputViewGroup vh) {
         //Remove listener from last phone input field if it is not null
         if (lastPhoneInputLayoutDisponsable != null)
             lastPhoneInputLayoutDisponsable.dispose();
