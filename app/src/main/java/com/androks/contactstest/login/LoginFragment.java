@@ -3,12 +3,12 @@ package com.androks.contactstest.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.androks.contactstest.R;
 import com.androks.contactstest.contacts.ContactsActivity;
@@ -99,17 +99,17 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         // Sign in failed
         if (response == null) {
             // Contact pressed back button
-            Snackbar.make(btnSingUp, "Sign up was cancelled", Snackbar.LENGTH_SHORT);
+            Toast.makeText(getContext(), R.string.sign_up_canceled, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-            Snackbar.make(btnSingUp, "No network connection", Snackbar.LENGTH_SHORT);
+            Toast.makeText(getContext(), R.string.no_network, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR)
-            Snackbar.make(btnSingUp, "Unknown fail", Snackbar.LENGTH_SHORT);
+            Toast.makeText(getContext(), R.string.unknown_error, Toast.LENGTH_SHORT).show();
 
     }
 

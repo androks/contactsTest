@@ -101,7 +101,8 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
 
     private void setUpFab() {
         // Set up floating action button
-        getActivity().findViewById(R.id.fab_add_contact).setOnClickListener(__ -> presenter.addNewContact());
+        getActivity().findViewById(R.id.fab_add_contact)
+                .setOnClickListener(__ -> presenter.addNewContact());
     }
 
     @Override
@@ -146,16 +147,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     public void showAddNewContact() {
         startActivityForResult(new Intent(getContext(), AddEditContactActivity.class),
                 AddEditContactActivity.REQUEST_ADD_CONTACT);
-    }
-
-    @Override
-    public void showNoContacts() {
-        //TODO: write no contacts UI implementation
-    }
-
-    @Override
-    public void showLoadingContactsError() {
-        //TODO: write loading contacts error UI implementation
     }
 
     @Override
@@ -222,7 +213,9 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
-        searchView.setQueryHint("Put name or phone number");
+        searchView.setQueryHint(getString(R.string.search_view_hint));
+
+        //Handle searchView with RxJava
         com.jakewharton.rxbinding2.support.v7.widget.RxSearchView.queryTextChanges(searchView)
                 .debounce(600, TimeUnit.MILLISECONDS)
                 .map(CharSequence::toString)

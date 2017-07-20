@@ -22,10 +22,6 @@ public interface ContactsContract {
 
         void showAddNewContact();
 
-        void showNoContacts();
-
-        void showLoadingContactsError();
-
         void showContactDetailsUI(String contactId);
 
         void showSettingUi();

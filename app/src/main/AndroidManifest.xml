@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".addeditcontact.AddEditContactActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity android:name=".contactdetail.ContactDetailActivity">
         </activity>

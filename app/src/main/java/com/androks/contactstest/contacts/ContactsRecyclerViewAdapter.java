@@ -25,23 +25,6 @@ public class ContactsRecyclerViewAdapter
     private List<Contact> contacts;
     private ContactItemListener itemListener;
 
-    final private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            checkIfEmpty();
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            checkIfEmpty();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            checkIfEmpty();
-        }
-    };
-
     public ContactsRecyclerViewAdapter(List<Contact> contacts, ContactItemListener itemListener) {
         this.contacts = contacts;
         this.itemListener = itemListener;

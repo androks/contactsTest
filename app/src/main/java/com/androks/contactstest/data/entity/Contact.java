@@ -53,14 +53,6 @@ public final class Contact {
         phones = new ArrayList<>(phoneNumber);
     }
 
-    public void setPhones(List<PhoneNumber> phones) {
-        this.phones = phones;
-    }
-
-    public void setEmails(List<Email> emails) {
-        this.emails = emails;
-    }
-
     @NonNull
     public String getId() {
         return id;

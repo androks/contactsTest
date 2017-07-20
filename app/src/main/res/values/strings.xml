@@ -47,4 +47,7 @@
     <string name="failed_to_call">Cannot make a call</string>
     <string name="created_at">Created</string>
     <string name="no_items_msg">Nothing to show</string>
+    <string name="no_network">No network connection</string>
+    <string name="sign_up_canceled">Sign up was cancelled</string>
+    <string name="search_view_hint">Put name or phone number</string>
 </resources>

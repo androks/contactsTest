@@ -110,6 +110,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
                 .mapToList(contactsMapperFunction).flatMap(
                         list -> {
                             Observable<Contact> contactsObj = Observable.fromIterable(list);
+                            //Join each contact in list with its list of emails and phones
                             return Observable.zip(
                                     contactsObj,
                                     contactsObj.flatMap(contact -> getPhoneNumbers(contact.getId())),
@@ -131,6 +132,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         Observable<Contact> contactObj = databaseHelper
                 .createQuery(ContactEntry.TABLE_NAME, sql, contactId)
                 .mapToOne(contactsMapperFunction);
+        //Join each contact in list with its list of emails and phones
         return Observable.zip(
                 contactObj,
                 contactObj.flatMap(contact -> getPhoneNumbers(contact.getId())),
@@ -154,11 +156,14 @@ public class ContactsLocalDataSource implements ContactsDataSource {
 
         BriteDatabase.Transaction transaction = databaseHelper.newTransaction();
         try {
+            //Delete al previous emails to prevent duplicates
             deleteAllContactsEmails(contact.getId());
             deleteAllContactsPhones(contact.getId());
 
+            //Inserting user
             databaseHelper.insert(ContactEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
 
+            //Inserting emails and phones
             Observable.fromIterable(contact.getEmails())
                     .subscribe(this::saveEmail);
             Observable.fromIterable(contact.getPhones())

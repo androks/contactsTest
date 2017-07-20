@@ -91,8 +91,10 @@ public class ContactsPresenter implements ContactsContract.Presenter {
         contactsRepository
                 .getContacts(FirebaseAuth.getInstance().getCurrentUser().getEmail())
                 .flatMap(list -> {
+                    //Create and filter flow
                     Observable<Contact> filteredSortedList = Observable.fromIterable(list)
                             .filter(this::filterContact);
+                    //Sort flow and convert it to the Observable<List<Contact>>
                     switch (sortType) {
                         case NAME:
                             return filteredSortedList.toSortedList(Contact::compareName).toObservable();
@@ -110,7 +112,7 @@ public class ContactsPresenter implements ContactsContract.Presenter {
                         //OnNext
                         this::processContacts,
                         //OnError
-                        throwable -> view.showLoadingContactsError(),
+                        __ -> {},
                         //OnCompleted
                         () -> view.setLoadingIndicator(false),
                         //OnSubscribe
@@ -136,8 +138,6 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     }
 
     private void processContacts(@NonNull List<Contact> contacts) {
-        if (contacts.isEmpty())
-            view.showNoContacts();
         //Show the list of the tasks
         view.showContacts(contacts);
 

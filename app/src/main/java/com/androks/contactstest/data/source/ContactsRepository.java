@@ -12,6 +12,10 @@ import io.reactivex.annotations.Nullable;
  * Created by androks on 15.07.17.
  */
 
+/**
+ * If we will be needed to add remote data source,
+ * this class will be used as a logic class between remote and local data source
+ */
 public class ContactsRepository implements ContactsDataSource {
 
     @Nullable
