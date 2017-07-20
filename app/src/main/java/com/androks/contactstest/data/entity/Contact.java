@@ -24,9 +24,9 @@ public final class Contact {
     @NonNull
     private String surname;
     @NonNull
-    private List<PhoneNumber> phones;
+    private List<PhoneNumber> phones = new ArrayList<>();
     @NonNull
-    private List<Email> emails;
+    private List<Email> emails = new ArrayList<>();
     @NonNull
     private String createdAt;
 
@@ -36,8 +36,6 @@ public final class Contact {
         name = builder.name;
         surname = builder.surname;
         setCreatedAt(builder.createdAt);
-        phones = new ArrayList<>(builder.phones);
-        emails = new ArrayList<>(builder.emails);
         setCreatedAt(builder.createdAt);
     }
 
@@ -73,26 +71,29 @@ public final class Contact {
         return surname;
     }
 
+    @NonNull
     public List<PhoneNumber> getPhones() {
         return phones;
     }
 
+    @NonNull
     public List<Email> getEmails() {
         return emails;
     }
 
+    @NonNull
     public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String date) {
+    private void setCreatedAt(@NonNull String date) {
         if (TextUtils.isEmpty(date))
             createdAt = DateTimeUtils.dateToString(new Date());
         else
             createdAt = date;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         if (TextUtils.isEmpty(id))
             this.id = UUID.randomUUID().toString();
         else
@@ -136,8 +137,6 @@ public final class Contact {
         private String name;
         private String surname;
         private String createdAt;
-        private List<Email> emails = new ArrayList<>();
-        private List<PhoneNumber> phones = new ArrayList<>();
 
         private Builder() {
         }
@@ -164,27 +163,6 @@ public final class Contact {
 
         public Builder createdAt(String val) {
             createdAt = val;
-            return this;
-        }
-
-        public Builder addPhone(PhoneNumber phoneNumber) {
-            phones.add(phoneNumber);
-            return this;
-        }
-
-        public Builder addEmail(Email email) {
-            emails.add(email);
-            return this;
-        }
-
-
-        public Builder addPhones(List<PhoneNumber> phoneNumber) {
-            phones.addAll(phoneNumber);
-            return this;
-        }
-
-        public Builder addEmails(List<Email> email) {
-            emails.addAll(email);
             return this;
         }
 

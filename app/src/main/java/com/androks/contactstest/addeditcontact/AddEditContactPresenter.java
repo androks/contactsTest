@@ -16,10 +16,6 @@ import java.util.List;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 
-/**
- * Created by androks on 17.07.17.
- */
-
 public class AddEditContactPresenter implements AddEditContactContract.Presenter {
 
     @NonNull
@@ -190,9 +186,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
                             }
                         },
                         //OnError
-                        __ -> {
-                            view.showUnknownError();
-                        }));
+                        __ -> view.showUnknownError()));
     }
 
     @Override

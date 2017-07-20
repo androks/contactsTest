@@ -44,6 +44,6 @@ public class ContactsActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle("Contacts");
+        actionBar.setTitle(R.string.title_contact);
     }
 }

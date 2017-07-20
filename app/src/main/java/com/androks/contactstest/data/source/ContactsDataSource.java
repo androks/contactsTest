@@ -7,9 +7,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
-/**
- * Created by androks on 15.07.17.
- */
 
 public interface ContactsDataSource {
 

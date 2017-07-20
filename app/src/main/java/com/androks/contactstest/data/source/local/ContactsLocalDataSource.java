@@ -219,10 +219,7 @@ public class ContactsLocalDataSource implements ContactsDataSource {
                 + " LIKE ?", contactId);
     }
 
-    /**
-     * @param contactId
-     * @return the flow of contact's emails with the id = contactId
-     */
+
     private Observable<List<Email>> getEmails(String contactId) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 EmailEntry.TABLE_NAME,
@@ -231,10 +228,6 @@ public class ContactsLocalDataSource implements ContactsDataSource {
                 .mapToList(emailMapperFunction);
     }
 
-    /**
-     * @param contactId
-     * @return the flow of contact's PhoneNumbers with the id = contactId
-     */
     private Observable<List<PhoneNumber>> getPhoneNumbers(String contactId) {
         String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
                 PhoneNumberEntry.TABLE_NAME,

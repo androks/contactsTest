@@ -16,8 +16,6 @@ public interface ContactsContract {
 
     interface View extends BaseView<Presenter>{
 
-        void setLoadingIndicator(boolean active);
-
         void showContacts(List<Contact> contacts);
 
         void showAddNewContact();

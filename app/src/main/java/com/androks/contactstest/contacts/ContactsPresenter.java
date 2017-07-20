@@ -75,18 +75,12 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     }
 
     @Override
-    public void loadContacts() {
-        loadContacts(true);
-    }
-
-    @Override
     public void addNewContact() {
         view.showAddNewContact();
     }
 
-    private void loadContacts(boolean showLoadingUI) {
-        view.setLoadingIndicator(showLoadingUI);
-
+    @Override
+    public void loadContacts() {
         subscriptions.clear();
         contactsRepository
                 .getContacts(FirebaseAuth.getInstance().getCurrentUser().getEmail())
@@ -114,7 +108,7 @@ public class ContactsPresenter implements ContactsContract.Presenter {
                         //OnError
                         __ -> {},
                         //OnCompleted
-                        () -> view.setLoadingIndicator(false),
+                        () -> {},
                         //OnSubscribe
                         d -> subscriptions.add(d));
 

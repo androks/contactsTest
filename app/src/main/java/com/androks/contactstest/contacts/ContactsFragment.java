@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androks.contactstest.R;
 import com.androks.contactstest.addeditcontact.AddEditContactActivity;
@@ -134,11 +133,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
     }
 
     @Override
-    public void setLoadingIndicator(boolean active) {
-        //TODO:Write Loading ind implementation
-    }
-
-    @Override
     public void showContacts(List<Contact> contacts) {
         contactsAdapter.replaceData(contacts);
     }
@@ -196,10 +190,6 @@ public class ContactsFragment extends Fragment implements ContactsContract.View 
                 presenter.openContactDetails(longClickedContact);
             }
         };
-    }
-
-    private void showMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override

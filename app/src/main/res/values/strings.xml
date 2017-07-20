@@ -50,4 +50,5 @@
     <string name="no_network">No network connection</string>
     <string name="sign_up_canceled">Sign up was cancelled</string>
     <string name="search_view_hint">Put name or phone number</string>
+    <string name="title_contact">Contacts</string>
 </resources>
