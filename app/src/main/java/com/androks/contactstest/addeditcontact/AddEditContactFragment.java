@@ -234,8 +234,10 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     }
 
     @Override
-    public void showNewEmailInputLayout() {
-        if (presenter.isConfigChanged() && emailViews.size() > 0)
+    public void showNewEmailInputLayout(boolean onBtnClicked) {
+        //If this is not first load the activity(rotation) and method is not calling by btn click
+        //then don't add any new field
+        if (presenter.isConfigChanged() && !onBtnClicked)
             return;
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -251,8 +253,10 @@ public class AddEditContactFragment extends Fragment implements AddEditContactCo
     }
 
     @Override
-    public void showNewPhoneInputLayout() {
-        if (presenter.isConfigChanged() && phoneViews.size() > 0)
+    public void showNewPhoneInputLayout(boolean onBtnClicked) {
+        //If this is not first load the activity(rotation) and method is not calling by btn click
+        //then don't add any new field
+        if (presenter.isConfigChanged() && !onBtnClicked)
             return;
         LayoutInflater inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -33,9 +33,9 @@ public interface AddEditContactContract {
 
         void showUnknownError();
 
-        void showNewEmailInputLayout();
+        void showNewEmailInputLayout(boolean onBtnClicked);
 
-        void showNewPhoneInputLayout();
+        void showNewPhoneInputLayout(boolean onBtnClicked);
     }
 
     interface Presenter extends BasePresenter {

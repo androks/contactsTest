@@ -65,8 +65,8 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     }
 
     private void initNewContact() {
-        view.showNewPhoneInputLayout();
-        view.showNewEmailInputLayout();
+        view.showNewPhoneInputLayout(false);
+        view.showNewEmailInputLayout(false);
     }
 
     @Override
@@ -202,12 +202,12 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     @Override
     public void addNewEmailInputLayout() {
-        view.showNewEmailInputLayout();
+        view.showNewEmailInputLayout(true);
     }
 
     @Override
     public void addNewPhoneInputLayout() {
-        view.showNewPhoneInputLayout();
+        view.showNewPhoneInputLayout(true);
     }
 
     private boolean isNewContact() {
